@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">My Places</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="opis">My Places je aplikacija koja omogucava korisnicima da pronalaze kosarkaske i fudbalske terene u njihovoj okolini kao i njihovo ocenjivanje i komentarisanje koje je javno pritom sakupljajuci poene</string>
+    <string name="naslov">Dobro dosli u aplikaciju My Places</string>
+    <string name="kreni">Kreni</string>
+    <string-array name="sirinaObruca">
+        <item>Normalna sirina</item>
+        <item>Sirok</item>
+        <item>Uzak</item>
+    </string-array>
+    <string-array name="osobinaObruca">
+        <item>Normalan osecaj</item>
+        <item>Tvrd</item>
+        <item>Mekan</item>
+    </string-array>
+    <string-array name="teren">
+        <item>Fudbalski</item>
+        <item>Kosarkaski</item>
+    </string-array>
+    <string-array name="podlogaK">
+        <item>Guma</item>
+        <item>Beton</item>
+        <item>Laminat</item>
+    </string-array>
+    <string-array name="mrezica">
+        <item>Ima</item>
+        <item>Nema</item>
+    </string-array>
+    <string-array name="posecenost">
+        <item>Mala</item>
+        <item>Srednja</item>
+        <item>Velika</item>
+    </string-array>
+    <string-array name="dimenzije">
+        <item>Male</item>
+        <item>Standard</item>
+        <item>Vece</item>
+    </string-array>
+    <string-array name="mreza">
+        <item>Ima</item>
+        <item>Nema</item>
+    </string-array>
+    <string-array name="golovi">
+        <item>Manji</item>
+        <item>Standard</item>
+        <item>Veci</item>
+    </string-array>
+    <string-array name="podlogaF">
+        <item>Trava</item>
+        <item>Beton</item>
+        <item>Guma</item>
+    </string-array>
+    <string-array name="Kosevi">
+        <item>305cm</item>
+        <item> manja od 305cm </item>
+        <item>veca od 305cm </item>
+    </string-array>
+</resources>

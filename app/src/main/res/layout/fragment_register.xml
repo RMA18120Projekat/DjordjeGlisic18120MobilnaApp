@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginFragment"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/imageViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:src="@drawable/elfaklogo" />
+
+
+        <TextView
+            android:id="@+id/textViewR10"
+            style="@style/Naslov"
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:layout_gravity="center_horizontal"
+            android:text="My Places"
+            android:textAlignment="center"
+
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/textViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Registrujte se "
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/editTextMejl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Ovde unesite E-mail"
+            android:inputType="text"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextIme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Ovde unesite svoje ime"
+            android:inputType="text"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextPrezime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Ovde unesite svoje prezime"
+            android:inputType="text"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextBrojTelefona"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Ovde unesite svoj broj telefona"
+            android:inputType="phone"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editTextNovaSifra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Ovde unesite Sifru"
+            android:inputType="textPassword"
+            android:textSize="25sp" />
+
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/buttonPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Otvori kameru"
+            android:layout_marginBottom="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/buttonReg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrujte se" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "492961955275",
+    "project_id": "fir-myplaces",
+    "storage_bucket": "fir-myplaces.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492961955275:android:87256731c9b281795a0a4e",
+        "android_client_info": {
+          "package_name": "com.example.myplaces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492961955275-vdpck71ci8vu5tpfadf0va8pufdg5vh5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo5S0HY-UySqozeiyqXq3Eno9LnRUICBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492961955275-vdpck71ci8vu5tpfadf0va8pufdg5vh5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

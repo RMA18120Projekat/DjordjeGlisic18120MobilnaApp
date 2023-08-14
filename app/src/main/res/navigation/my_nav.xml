@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/pocetnaFragment">
+
+    <fragment
+        android:id="@+id/pocetnaFragment"
+        android:name="com.example.myplaces.PocetnaFragment"
+        android:label="fragment_pocetna"
+        tools:layout="@layout/fragment_pocetna" >
+        <action
+            android:id="@+id/action_pocetnaFragment_to_izborFragment"
+            app:destination="@id/izborFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/izborFragment"
+        android:name="com.example.myplaces.IzborFragment"
+        android:label="fragment_izbor"
+        tools:layout="@layout/fragment_izbor" >
+        <action
+            android:id="@+id/action_izborFragment_to_pocetnaFragment2"
+            app:destination="@id/pocetnaFragment"
+            app:popUpTo="@id/pocetnaFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_izborFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_izborFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.myplaces.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_izborFragment"
+            app:destination="@id/izborFragment"
+            app:popUpTo="@id/izborFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.myplaces.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_izborFragment"
+            app:destination="@id/izborFragment"
+            app:popUpTo="@id/izborFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.myplaces.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_mojaMestaFragment"
+            app:destination="@id/mojaMestaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_dodajMestoFragment"
+            app:destination="@id/dodajMestoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_izborFragment"
+            app:destination="@id/izborFragment"
+            app:popUpTo="@id/izborFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mojaMestaFragment"
+        android:name="com.example.myplaces.MojaMestaFragment"
+        android:label="fragment_moja_mesta"
+        tools:layout="@layout/fragment_moja_mesta" >
+        <action
+            android:id="@+id/action_mojaMestaFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mojaMestaFragment_to_detaljniFragment2"
+            app:destination="@id/detaljniFragment2" />
+        <action
+            android:id="@+id/action_mojaMestaFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dodajMestoFragment"
+        android:name="com.example.myplaces.DodajMestoFragment"
+        android:label="fragment_dodaj_mesto"
+        tools:layout="@layout/fragment_dodaj_mesto" >
+        <action
+            android:id="@+id/action_dodajMestoFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dodajMestoFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detaljniFragment2"
+        android:name="com.example.myplaces.DetaljniFragment"
+        android:label="fragment_detaljni"
+        tools:layout="@layout/fragment_detaljni" >
+        <action
+            android:id="@+id/action_detaljniFragment2_to_mojaMestaFragment"
+            app:destination="@id/mojaMestaFragment"
+            app:popUpTo="@id/mojaMestaFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_detaljniFragment2_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_detaljniFragment2_to_mapFragment2"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.myplaces.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapFragment_to_mojaMestaFragment"
+            app:destination="@id/mojaMestaFragment"
+            app:popUpTo="@id/mojaMestaFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapFragment_to_dodajMestoFragment"
+            app:destination="@id/dodajMestoFragment"
+            app:popUpTo="@id/dodajMestoFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapFragment_to_detaljniFragment2"
+            app:destination="@id/detaljniFragment2"
+            app:popUpTo="@id/detaljniFragment2"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.example.myplaces.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" >
+        <action
+            android:id="@+id/action_infoFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_infoFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="com.example.myplaces.EditFragment"
+        android:label="fragment_edit"
+        tools:layout="@layout/fragment_edit" >
+        <action
+            android:id="@+id/action_editFragment_to_infoFragment"
+            app:destination="@id/infoFragment"
+            app:popUpTo="@id/infoFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_editFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

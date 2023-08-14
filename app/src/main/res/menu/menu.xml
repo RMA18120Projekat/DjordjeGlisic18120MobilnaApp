@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/fragment_login"
+        android:title="Odjavi se" />
+    <item
+        android:id="@+id/fragment_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Uvid u svoje informacije" />
+    <item
+        android:id="@+id/fragment_edit"
+        android:title="Izmene" />
+</menu>

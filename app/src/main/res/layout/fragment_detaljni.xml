@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:textAlignment="center"
+    tools:context=".DodajMestoFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/editTextNazivMestaU"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:ems="10"
+        android:hint="Naziv mesta"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/slikaObjektaU"
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        tools:src="@drawable/bonuspack_bubble" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Teren"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spinnerTerenU"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:entries="@array/teren"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textSirinaU"
+            android:text="Srirna obruca"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerSirinaU"
+            android:layout_width="196dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/sirinaObruca"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textOsobinaU"
+            android:text="Osobina obruca"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerOsobinaU"
+            android:layout_width="173dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/osobinaObruca"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textPodlogaKosarkaU"
+            android:text="Podloga"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerPodlogaKosarkaU"
+            android:layout_width="246dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/podlogaK"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMrezicaU"
+            android:text="Mrezica"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerMrezicaU"
+            android:layout_width="246dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/mrezica"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textKoseviU"
+            android:text="Velicina kosa"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerKoseviU"
+            android:layout_width="306dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/Kosevi"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textPosecenostU"
+            android:text="Posecenost"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spinnerPosecenostU"
+            android:layout_width="257dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:entries="@array/posecenost"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textDimenzijeU"
+            android:text="Dimenzije"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spinnerDimenzijeU"
+            android:layout_width="272dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:entries="@array/dimenzije"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textPodlogaFudbalU"
+            android:text="Podloga"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerPodlogaFudbalU"
+            android:layout_width="284dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/podlogaF"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textGoloviU"
+            android:text="GoloviU"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerGoloviU"
+            android:layout_width="306dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/golovi"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textMrezaU"
+            android:text="Mreza"
+            android:textSize="20sp"
+            android:visibility="gone"/>
+
+        <Spinner
+            android:id="@+id/spinnerMrezaU"
+            android:layout_width="306dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:entries="@array/mreza"/>
+    </LinearLayout>
+
+
+
+
+    <EditText
+        android:id="@+id/editTextKomentarU"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start"
+        android:hint="Opsti komentar o mestu"
+        android:inputType="textMultiLine"
+        android:textAlignment="textStart" />
+
+    <EditText
+        android:id="@+id/editTextOcenaU"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:ems="10"
+        android:hint="Dodajte ocenu"
+        android:inputType="number" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressMestaU"
+        android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="107dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Latituda"
+                android:layout_width="106dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:textSize="25sp"
+                tools:text="Latituda" />
+
+            <TextView
+                android:id="@+id/Longituda"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="longituda" />
+
+            <Button
+                android:id="@+id/buttonSetU"
+                android:layout_width="wrap_content"
+                android:layout_height="107dp"
+                android:text="Postavi objekat na mapi"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp">
+
+            <Button
+                android:id="@+id/buttonDodajKameromU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="35dp"
+                android:text="Otvori kameru" />
+
+            <Button
+                android:id="@+id/buttonDodajGalerijomU"
+                android:layout_width="217dp"
+                android:layout_height="wrap_content"
+                android:text="Otvori galeriju" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="86dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonDodajMestoU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:text="Azuriraj mesto" />
+
+            <Button
+                android:id="@+id/buttonObrisiU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="Obrisi mesto" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonNazadU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Otkazi" />
+
+    </LinearLayout>
+</ScrollView>
