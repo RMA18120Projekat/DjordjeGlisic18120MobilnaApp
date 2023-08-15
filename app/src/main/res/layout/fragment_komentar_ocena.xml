@@ -1,14 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".KomentarOcenaFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>
+
+        <ImageView
+            android:id="@+id/imageViewR3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:src="@drawable/elfaklogo" />
+
+        <TextView
+        android:id="@+id/textViewR10"
+        style="@style/Naslov"
+        android:layout_width="match_parent"
+        android:layout_height="79dp"
+        android:layout_gravity="center_horizontal"
+        android:text="My Places"
+        android:textAlignment="center"
+
+        android:textSize="48sp" />
+
+    <TextView
+        android:id="@+id/textViewR3"
+        android:layout_width="match_parent"
+        android:layout_height="126dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:text="Otvorite mapu, pronadjite mesto i dodajte komentar i ocenu"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/buttonOpenMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nadji mesto u blizini" />
+
+    <TextView
+        android:id="@+id/komentarNaziv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="35sp"
+        tools:text="Naziv " />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/komentSLika"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/komentarLatituda"
+            android:layout_width="149dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="45dp"
+            android:text="Latituda"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/konetarLongituda"
+            android:layout_width="168dp"
+            android:layout_height="match_parent"
+            android:text="Longituda"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+        <EditText
+            android:id="@+id/komentarOcena"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:hint="Unesite ocenu od 1-10"
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/editKomentar"
+            android:layout_width="match_parent"
+            android:layout_height="298dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Dajte komentar o mestu"
+            android:inputType="textMultiLine"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/komentarPosalji"
+                android:layout_width="wrap_content"
+                android:layout_height="69dp"
+                android:layout_marginRight="15dp"
+                android:text="Posalji komentar" />
+
+            <Button
+                android:id="@+id/komentarNazad"
+                android:layout_width="181dp"
+                android:layout_height="match_parent"
+                android:text="Nazad" />
+        </LinearLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/upisKomentaraPB"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+</ScrollView>

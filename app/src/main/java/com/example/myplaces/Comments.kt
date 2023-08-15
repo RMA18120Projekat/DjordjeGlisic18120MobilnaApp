@@ -1,0 +1,3 @@
+package com.example.myplaces
+
+data class Comments (var id:Int=0,var autor:String="",var mesto:String="",var ocena:Int=0,var komentar:String="",var pozitivni:Int=0,var negativni:Int=0)

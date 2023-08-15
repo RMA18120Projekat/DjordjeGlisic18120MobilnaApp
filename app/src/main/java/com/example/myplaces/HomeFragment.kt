@@ -41,6 +41,7 @@ class HomeFragment : Fragment() {
     lateinit var dodajMesto:Button
     lateinit var mape:ImageView
     lateinit var profilna:ImageView
+    lateinit var komentarisiMesto:Button
 
     private lateinit var prezimeBaza:TextView
     override fun onCreateView(
@@ -102,6 +103,10 @@ class HomeFragment : Fragment() {
             locationViewModel.jedanObjekat=false
             findNavController().navigate(R.id.action_homeFragment_to_mapFragment)
 
+        }
+        komentarisiMesto=view.findViewById(R.id.buttonKomentarisiOcena)
+        komentarisiMesto.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_komentarOcenaFragment)
         }
 
         return view

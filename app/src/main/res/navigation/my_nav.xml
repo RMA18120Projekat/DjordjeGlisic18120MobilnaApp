@@ -169,6 +169,11 @@
             app:destination="@id/detaljniFragment2"
             app:popUpTo="@id/detaljniFragment2"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapFragment_to_komentarOcenaFragment"
+            app:destination="@id/komentarOcenaFragment"
+            app:popUpTo="@id/komentarOcenaFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/infoFragment"
@@ -210,5 +215,8 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_komentarOcenaFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 </navigation>

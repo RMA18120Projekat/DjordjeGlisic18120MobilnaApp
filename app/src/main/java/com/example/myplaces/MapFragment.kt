@@ -53,10 +53,6 @@ class MapFragment : Fragment() {
 
 
         setupLocation()
-//        map.controller.setZoom(14.0)
-
-        //val startPoint = GeoPoint(43.158495, 22.585555)
-        //map.controller.setCenter(startPoint)
 
     }
 
@@ -105,7 +101,7 @@ class MapFragment : Fragment() {
                    if (locationViewModel.dodajObjekat == true||locationViewModel.jedanObjekat==true) {
                        for (koordinata in locationViewModel.getKoordinate()) {
                            var userPoint = GeoPoint(koordinata.latituda, koordinata.longituda)
-                           if (endPoint.distanceToAsDouble(userPoint) < 50) {
+                           if (endPoint.distanceToAsDouble(userPoint) < 30) {
                                Toast.makeText(
                                    context,
                                    "Ne mozete da izabere datu lokaciju jer je izabrana od strane drugog korisnika",
@@ -140,6 +136,7 @@ class MapFragment : Fragment() {
        }
         var overlayEvents=MapEventsOverlay(recive)
         map.overlays.add(overlayEvents)
+
     }
     private fun obeleziSveObjekteNaMapi()
     {
@@ -147,8 +144,7 @@ class MapFragment : Fragment() {
         for(mojeMesto in sharedViewModel.getMyPlaces())
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
-            locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble()))
-
+            locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
             val marker = Marker(map)
             marker.position = sPoint
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
@@ -170,6 +166,94 @@ class MapFragment : Fragment() {
 
 
         }
+
+    }
+    private fun obeleziTudjeObjekte()
+    {
+
+        for(mojeMesto in sharedViewModel.getMyPlaces())
+        {
+            //AKO SE IZ NIZA SVIH MESTA NADJE NEKI KOGA NIJE DODAO TRENUTNI KORISNIK
+            if(mojeMesto.autor!=sharedViewModel.ime) {
+                //DODAJ TO MESTO U NIZ KOORDINATA
+                locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(), mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString(),mojeMesto.img.toString()))
+                //OBELEZI GA
+                val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
+                val marker = Marker(map)
+                marker.position = sPoint
+                marker.setAnchor(
+                    Marker.ANCHOR_CENTER,
+                    Marker.ANCHOR_BOTTOM
+                ) // Postavljanje tačke spajanja markera
+                marker.title = mojeMesto.naziv
+                marker.subDescription =
+                    "Mesto je dodao:" + mojeMesto.autor + "<br>" + "Teren je:" + mojeMesto.teren + "<br>" + "Ocena:" + mojeMesto.ocena + "<br>" + "Dimenzije:" + mojeMesto.dimenzije + "<br>" + "Posecenost:" + mojeMesto.posecenost + "<br>"
+                if (mojeMesto.teren == "Kosarkaski") {
+                    marker.subDescription += "Sirinca obruca:" + mojeMesto.sirinaObruca + "<br>" + "Osobina obruca:" + mojeMesto.osobinaObruca + "<br>" + "Podloga:" + mojeMesto.podlogaKosarka + "<br>" + "Mrezica:" + mojeMesto.mrezica + "<br>" + "Visina kosa:" + mojeMesto.visinaKosa
+                } else if (mojeMesto.teren == "Fudbalski") {
+                    marker.subDescription += "Mreza" + mojeMesto.mreza + "<br>" + "Golovi:" + mojeMesto.golovi + "<br>" + "Podloga:" + mojeMesto.podlogaFudbal
+                }
+
+                // Dodavanje markera na mapu
+                map.overlays.add(marker)
+                map.invalidate()
+            }
+
+
+
+        }
+
+    }
+    private fun dozvoliKlikNaTudjiObjekat() {
+        val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+        myLocationOverlay.enableMyLocation()
+        map.overlays.add(myLocationOverlay)
+        map.controller.setCenter(myLocationOverlay.myLocation)
+        Toast.makeText(context,"Prikazuju se mesta drugih korisnika",Toast.LENGTH_SHORT).show()
+        var recive = object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                val clickedPoint = p ?: return false
+                var startPoint = GeoPoint(myLocationOverlay.myLocation.latitude, myLocationOverlay.myLocation.longitude)
+                var endPoint = GeoPoint(clickedPoint.latitude, clickedPoint.longitude)
+                if(startPoint.distanceToAsDouble(endPoint)<1000)
+                {
+                    var i:Int=0
+                    for(koordinate in locationViewModel.getKoordinate())
+                    {
+                        var objPoint=GeoPoint(koordinate.latituda,koordinate.longituda)
+                        if(endPoint.distanceToAsDouble(objPoint)<=30)
+                        {
+                            val lon = clickedPoint.longitude.toString()
+                            val lati = clickedPoint.latitude.toString()
+                            locationViewModel.setLocationAndName(lon, lati,koordinate.naziv.toString())
+                            findNavController().popBackStack()
+                            return true
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Nema objekta na toj lokacii",Toast.LENGTH_SHORT).show()
+                            return false
+                        }
+                    }
+                    return false
+
+                }
+                else
+                {
+                    Toast.makeText(context,"Ne mozete da kometarisete objekte dalje od 1km",Toast.LENGTH_SHORT).show()
+                    return false
+                }
+
+            }
+
+            override fun longPressHelper(p: GeoPoint?): Boolean {
+                return false
+            }
+
+
+        }
+        var overlayEvents=MapEventsOverlay(recive)
+        map.overlays.add(overlayEvents)
 
     }
     private fun obeleziObjekatNaMapi()
@@ -217,6 +301,12 @@ class MapFragment : Fragment() {
                 setMyLocationOverlay()
 
 
+            }
+            else if(locationViewModel.komentarisiObjekat==true)
+            {
+                obeleziTudjeObjekte()
+                dozvoliKlikNaTudjiObjekat()
+                setMyLocationOverlay()
             }
             else
             {
