@@ -17,11 +17,25 @@ class LocationViewModel: ViewModel() {
     var dodajObjekat:Boolean=false
     var samoPregled:Boolean=false
     var jedanObjekat:Boolean=false
+    var komentarisiObjekat:Boolean=false
     // i sa neki od nji bude true zavisno od dugme na koje se klikne
     fun setLocation(lon:String,lat:String)
     {
         _longitude.value=lon
         _latitude.value=lat
         setLocation=false
+    }
+   private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
+        fun getKoordinate():ArrayList<Koordinate>
+        {
+                return koordinate
+        }
+    fun setKoordinate(koor:ArrayList<Koordinate>)
+    {
+        koordinate=koor
+    }
+    fun addOne(koor:Koordinate)
+    {
+        koordinate.add(koor)
     }
 }

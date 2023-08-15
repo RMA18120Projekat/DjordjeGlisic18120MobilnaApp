@@ -523,7 +523,28 @@ class DetaljniFragment : Fragment() {
                     naziv.text = ""
                     opis.text.clear()
                     ocena.text.clear()
-                    findNavController().navigate(R.id.action_detaljniFragment2_to_mojaMestaFragment)
+                    DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "").replace("$", "")
+                        .replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
+                        if(snapshot.exists())
+                        {
+                            sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toInt())
+                            if(sharedViewModel.user.bodovi!=null)
+                            {
+                                sharedViewModel.user.bodovi=sharedViewModel.user.bodovi?.plus(2)
+
+                            }
+                            DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
+                                .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
+                                Toast.makeText(context,"Dobili ste jos 2 boda",Toast.LENGTH_SHORT).show()
+                            }.addOnFailureListener {
+                                Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                    }.addOnFailureListener {
+                        Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                    }
+                    //findNavController().navigate(R.id.action_detaljniFragment2_to_mojaMestaFragment)
 
 
                 }.addOnFailureListener {
@@ -540,7 +561,30 @@ class DetaljniFragment : Fragment() {
         obrisi.setOnClickListener{
             DataBase.databasePlaces.child(naziv.text.toString()).removeValue().addOnSuccessListener {
                 Toast.makeText(context,"Uspesno ste obrisali mesto ${naziv.text.toString()}",Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_detaljniFragment2_to_mojaMestaFragment)
+               azuriraj.visibility=View.GONE
+                obrisi.visibility=View.GONE
+
+                DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "").replace("$", "")
+                    .replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
+                    if(snapshot.exists())
+                    {
+                        sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toInt())
+                        if(sharedViewModel.user.bodovi!=null)
+                        {
+                            sharedViewModel.user.bodovi=sharedViewModel.user.bodovi?.minus(10)
+
+                        }
+                        DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
+                            .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
+                            Toast.makeText(context,"Izgubili  ste 10 boda",Toast.LENGTH_SHORT).show()
+                        }.addOnFailureListener {
+                            Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                }.addOnFailureListener {
+                    Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                }
 
             }.addOnFailureListener{
                 Toast.makeText(context,"Greska",Toast.LENGTH_SHORT).show()

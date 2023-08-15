@@ -60,6 +60,7 @@ class DodajMestoFragment : Fragment() {
     lateinit var slika:ImageView
     ////////////////////////////////////////
     lateinit var teren:Spinner
+    lateinit var cekajSliku:ProgressBar
 
     var terenIzabran:String="Fudbalski"
     /////////////////////////////////////////
@@ -106,6 +107,7 @@ class DodajMestoFragment : Fragment() {
         opisMesta=view.findViewById(R.id.editTextKomentar)
         ocenaMesta=view.findViewById(R.id.editTextOcena)
         progress=view.findViewById(R.id.progressMesta)
+        cekajSliku=view.findViewById(R.id.cekajSliku)
         potvrdi=view.findViewById(R.id.buttonDodajMesto)
         otkazi=view.findViewById(R.id.buttonOtkaziDodavanje)
         latituda=view.findViewById(R.id.editLatituda)
@@ -356,9 +358,6 @@ class DodajMestoFragment : Fragment() {
         }
         ///////////////////////////////////////////////////////////////////////////////
         potvrdi.setOnClickListener {
-            if(imgUrl!="")
-            {
-
 
                 val nazivPom = nazivMesta.text.toString()
                 val opisPom = opisMesta.text.toString()
@@ -389,9 +388,6 @@ class DodajMestoFragment : Fragment() {
                         )
 
                     } else {
-                        while (imgUrl == "") {
-                            Toast.makeText(context, "Uploadovanje slike u bazu", Toast.LENGTH_SHORT)
-                        }
 
                         mesto = Places(
                             nazivMesta.text.toString(),
@@ -433,7 +429,23 @@ class DodajMestoFragment : Fragment() {
                                 ocenaMesta.text.clear()
                                 longituda.text.clear()
                                 latituda.text.clear()
+                                DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
+                                    .replace("$", "").replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
+                                    if(snapshot.exists())
+                                    {
+                                        sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toIntOrNull())
+                                        sharedViewModel.user.bodovi=sharedViewModel.user.bodovi?.plus(10)
+                                        DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
+                                            .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
+                                                Toast.makeText(context,"Dobili ste jos 10 bodova",Toast.LENGTH_SHORT).show()
+                                        }.addOnFailureListener {
+                                            Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                                        }
+                                    }
 
+                                }.addOnFailureListener{
+                                    Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                                }
 
                             } else {
                                 Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
@@ -445,11 +457,7 @@ class DodajMestoFragment : Fragment() {
                 } else {
                     Toast.makeText(context, "Niste popunili sva polja", Toast.LENGTH_SHORT).show()
                 }
-            }
-            else
-            {
-                Toast.makeText(context,"SLika jos uvek nije zapamcena probajte ponovo kasnije",Toast.LENGTH_SHORT).show()
-            }
+
 
         }
         otkazi.setOnClickListener{
@@ -530,7 +538,8 @@ class DodajMestoFragment : Fragment() {
     private fun posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap:Bitmap)
     {
         val imagesRef = DataBase.storageRef.child("images/${System.currentTimeMillis()}.jpg")
-
+        slika.visibility=View.GONE
+        cekajSliku.visibility=View.VISIBLE
         // Convert the bitmap to bytes
         val baos = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -545,6 +554,8 @@ class DodajMestoFragment : Fragment() {
                 imagesRef.downloadUrl.addOnSuccessListener { uri ->
                     // Save the URI to the database or use it as needed
                     imgUrl = uri.toString()
+                    cekajSliku.visibility=View.GONE
+                    slika.visibility=View.VISIBLE
                     Toast.makeText(context,"Slika je zapamcena",Toast.LENGTH_SHORT).show()
                     // Add the code to save the URL to the user's data in Firebase Database here
                 }.addOnFailureListener { exception ->

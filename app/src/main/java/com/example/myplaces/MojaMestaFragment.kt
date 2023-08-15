@@ -39,10 +39,7 @@ class MojaMestaFragment : Fragment() {
 
         DataBase.databasePlaces.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                MyPlaces.clear() // Očisti listu prije dodavanja novih podataka
-                // Kkvo sam i rekal, 2 puta si pribavljas referencu na bazutu i za to puca, kad si odma dodas onda neje, ali akvo si vidis objekti pa dodas onda oce
-                // da napravim li klasu npr baza i tu da imam public static firebasedatabase i storage i da dji okam imeKlase.ime
-                // Vidi na mn kvo je klasa FB
+                MyPlaces.clear()
                 for (placeSnapshot in snapshot.children) {
                     val place = placeSnapshot.getValue(Places::class.java)
                     place?.let {
@@ -70,20 +67,21 @@ class MojaMestaFragment : Fragment() {
     }
 
     private fun updateListView() {
-         val imena = ArrayList<String>()
+        val imena = ArrayList<String>()
 
         for (name in MyPlaces) {
-            if(name.autor==sharedViewModel.ime)
-            {
-
+            if (name.autor == sharedViewModel.ime) {
                 imena.add(name.naziv.toString())
             }
-
         }
 
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, imena)
-        listView.adapter = adapter
-        progresBar.visibility = View.GONE
-
+        // Kako biste izbegli Exception "Fragment not attached to a context",
+        // proverite da li je fragment povezan sa aktivnošću pre nego što ažurirate interfejs
+        if (isAdded) {
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, imena)
+            listView.adapter = adapter
+            progresBar.visibility = View.GONE
+        }
     }
+
 }

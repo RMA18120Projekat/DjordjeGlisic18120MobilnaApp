@@ -35,6 +35,7 @@ class MapFragment : Fragment() {
     private val locationViewModel:LocationViewModel by activityViewModels()
     private val sharedViewModel:KorisnikViewModel by activityViewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,25 +97,41 @@ class MapFragment : Fragment() {
            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                val clickedPoint = p ?: return false
 
-               val R = 6371.0 // Poluprečnik Zemlje u kilometrima
 
-               val dLat = Math.toRadians(myLocationOverlay.myLocation.latitude - clickedPoint.latitude)
-               val dLon = Math.toRadians(myLocationOverlay.myLocation.longitude - clickedPoint.longitude)
+               var startPoint =GeoPoint(myLocationOverlay.myLocation.latitude ,myLocationOverlay.myLocation.longitude)
+               var endPoint = GeoPoint( clickedPoint.latitude , clickedPoint.longitude)
 
-               val a = sin(dLat / 2) * sin(dLat / 2) +
-                       cos(Math.toRadians(clickedPoint.latitude)) * cos(Math.toRadians(myLocationOverlay.myLocation.latitude)) *
-                       sin(dLon / 2) * sin(dLon / 2)
-               val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-               val distance = R * c
-               if ( distance<= 1) {
-                   val lon = clickedPoint.longitude.toString()
-                   val lati = clickedPoint.latitude.toString()
-                   locationViewModel.setLocation(lon, lati)
-                   findNavController().popBackStack()
-                   return true
-               } else {
+               if ( startPoint.distanceToAsDouble(endPoint)<= 1000) {
+                   if (locationViewModel.dodajObjekat == true||locationViewModel.jedanObjekat==true) {
+                       for (koordinata in locationViewModel.getKoordinate()) {
+                           var userPoint = GeoPoint(koordinata.latituda, koordinata.longituda)
+                           if (endPoint.distanceToAsDouble(userPoint) < 50) {
+                               Toast.makeText(
+                                   context,
+                                   "Ne mozete da izabere datu lokaciju jer je izabrana od strane drugog korisnika",
+                                   Toast.LENGTH_SHORT
+                               ).show()
+                               return false
+
+
+                           }
+                       }
+                       val lon = clickedPoint.longitude.toString()
+                       val lati = clickedPoint.latitude.toString()
+                       locationViewModel.setLocation(lon, lati)
+                       findNavController().popBackStack()
+                       return true
+
+                   }
+                   else
+                   {
+                       return false
+                   }
+               }
+               else {
                    Toast.makeText(context,"Ne mozete da izabere datu lokaciju jer je dalja od 1km (nije Vam u blizini)",Toast.LENGTH_SHORT).show()
                    return false
+
                }
            }
            override fun longPressHelper(p: GeoPoint?): Boolean {
@@ -130,6 +147,8 @@ class MapFragment : Fragment() {
         for(mojeMesto in sharedViewModel.getMyPlaces())
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
+            locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble()))
+
             val marker = Marker(map)
             marker.position = sPoint
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
@@ -149,7 +168,20 @@ class MapFragment : Fragment() {
             map.invalidate()
 
 
+
         }
+
+    }
+    private fun obeleziObjekatNaMapi()
+    {
+        var startTacka= GeoPoint(sharedViewModel.latituda.toDouble(),sharedViewModel.longituda.toDouble())
+        val marker = Marker(map)
+        marker.position = startTacka
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
+        marker.title = sharedViewModel.izabranoMesto
+        marker.subDescription = "Mesto je dodao:${sharedViewModel.ime}"
+        map.overlays.add(marker)
+        map.invalidate()
 
     }
     private fun setUpMap()
@@ -168,15 +200,7 @@ class MapFragment : Fragment() {
             //Za dodavanje objekata
             if (locationViewModel.dodajObjekat==true)
             {
-               /* startPoint= GeoPoint(sharedViewModel.latituda.toDouble(),sharedViewModel.longituda.toDouble())
-                val marker = Marker(map)
-                marker.position = startPoint
-                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
-                marker.title = "Moja lokacija" // Naslov markera
-                marker.subDescription = "Ovde sam trenutno" // Dodatni opis markera*/
 
-                // Dodavanje markera na mapu
-                //map.overlays.add(marker)
                 setMyLocationOverlay()
                 obeleziSveObjekteNaMapi()
 
@@ -187,22 +211,8 @@ class MapFragment : Fragment() {
             //Kad izabere Neki objekat iz liste objekata
             else if(locationViewModel.jedanObjekat==true)
             {
-                Toast.makeText(context,"Uso sam u jedan objekat ${sharedViewModel.latituda}+${sharedViewModel.longituda}",Toast.LENGTH_SHORT).show()
-                startPoint= GeoPoint(sharedViewModel.latituda.toDouble(),sharedViewModel.longituda.toDouble())
-                val marker = Marker(map)
-                marker.position = startPoint
-                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
-                marker.title = sharedViewModel.izabranoMesto
-                marker.subDescription = "Mesto je dodao:${sharedViewModel.ime}"
-                map.overlays.add(marker)
-                map.invalidate()
-                // ne razumem najbolje kvo da napravim da ne puca
-                // Napravi si negde, npr u VM ovija listeneri za podaci
-                // A na maputu samo prikazi iz listutu iz VM, znaci napravis im markeri
-                // ja imam ono od lab da u VM se pamte longituda i latituda i posle se samo obeleze
-                //a ovu listu koju on obelezava msm da bese isto u VM
-
-
+                obeleziObjekatNaMapi()
+                setOnMapClickOverlay()
 
                 setMyLocationOverlay()
 

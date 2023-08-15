@@ -41,7 +41,7 @@ class InfoFragment : Fragment() {
         prezime.text=user.user.prezime
         brojTelefona.text=user.user.brojTelefona.toString()
         email.text=user.user.korisnicko
-        bodovi.text=100.toString()
+        bodovi.text=user.user.bodovi.toString()
 
 
         return view

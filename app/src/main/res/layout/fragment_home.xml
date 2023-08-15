@@ -107,8 +107,15 @@
         android:layout_height="48dp"
 
         android:text="Vidi listu korisnika" />
+        <Button
+            android:id="@+id/buttonKomentarisiOcena"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
 
-    <Button
+            android:text="Dodaj komentar i ocenu objektu" />
+
+
+        <Button
         android:id="@+id/buttonMojaMesta"
         android:layout_width="match_parent"
         android:layout_height="48dp"

@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
             database.child(key).get().addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     textIme.text = snapshot.child("ime").value.toString()
-                    sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString())
+                    sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toIntOrNull())
                     prezimeBaza.text=snapshot.child("prezime").value.toString()
                     val imageName=snapshot.child("img").value.toString()
                     if(imageName!="")

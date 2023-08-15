@@ -29,16 +29,17 @@ class KorisnikViewModel: ViewModel() {
 
         DataBase.databasePlaces.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                myPlaces.clear() // Očisti listu prije dodavanja novih podataka
+                val updatedPlaces = ArrayList<Places>() // Kreirajte novu listu za ažurirane podatke
 
                 for (placeSnapshot in snapshot.children) {
                     val place = placeSnapshot.getValue(Places::class.java)
                     place?.let {
-                        myPlaces.add(it)
+                        updatedPlaces.add(it) // Dodajte podatke u novu listu
                     }
                 }
 
-
+                myPlaces.clear() // Obrišite postojeće podatke iz liste
+                myPlaces.addAll(updatedPlaces) // Ažurirajte listu sa novim podacima
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -46,6 +47,8 @@ class KorisnikViewModel: ViewModel() {
                 Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
             }
         })
+
+
     }
 
 
