@@ -176,7 +176,7 @@ class MapFragment : Fragment() {
             //AKO SE IZ NIZA SVIH MESTA NADJE NEKI KOGA NIJE DODAO TRENUTNI KORISNIK
             if(mojeMesto.autor!=sharedViewModel.ime) {
                 //DODAJ TO MESTO U NIZ KOORDINATA
-                locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(), mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString(),mojeMesto.img.toString()))
+                locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(), mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
                 //OBELEZI GA
                 val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
                 val marker = Marker(map)
@@ -225,7 +225,7 @@ class MapFragment : Fragment() {
                         {
                             val lon = clickedPoint.longitude.toString()
                             val lati = clickedPoint.latitude.toString()
-                            locationViewModel.setLocationAndName(lon, lati,koordinate.naziv.toString())
+                            locationViewModel.setLocationAndName(lon, lati,koordinate.naziv.toString(),true)
                             findNavController().popBackStack()
                             return true
                         }

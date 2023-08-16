@@ -17,6 +17,7 @@ class DataBase {
         val databasePlaces:DatabaseReference= database.getReference("Places")
         var databaseComments:DatabaseReference= database.getReference("Comments")
         val storageRef: StorageReference= FirebaseStorage.getInstance().reference
+        var id:Int=1
 
 
     }

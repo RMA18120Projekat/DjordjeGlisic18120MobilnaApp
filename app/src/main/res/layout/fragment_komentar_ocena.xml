@@ -42,39 +42,320 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Nadji mesto u blizini" />
-
-    <TextView
-        android:id="@+id/komentarNaziv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="35sp"
-        tools:text="Naziv " />
-        <ImageView
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/komentSLika"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal">
+            android:text="Prikazi info o mestu"
+            android:id="@+id/buttonInfo"
+            android:enabled="false"/>
 
         <TextView
-            android:id="@+id/komentarLatituda"
-            android:layout_width="149dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="45dp"
-            android:text="Latituda"
-            android:textSize="25sp" />
+            android:id="@+id/komentarNaziv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            tools:text="Naziv " />
 
-        <TextView
-            android:id="@+id/konetarLongituda"
-            android:layout_width="168dp"
-            android:layout_height="match_parent"
-            android:text="Longituda"
-            android:textSize="25sp" />
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/komentSLika"
+            android:layout_width="match_parent"
+            android:layout_height="108dp" />
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/slikaProgres"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextTeren"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Teren:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarTeren"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Dusko radovic" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextOcena"
+                android:layout_width="91dp"
+                android:layout_height="wrap_content"
+                android:text="Ocena:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarOcenaB"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:textSize="25sp"
+                tools:text="9" />
+
+            <TextView
+                android:id="@+id/TextAutor"
+                android:layout_width="73dp"
+                android:layout_height="match_parent"
+                android:text="Autor:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarAutor"
+                android:layout_width="153dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Ime neko" />
+
+        </LinearLayout>
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/komentarProgres"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextSirina"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sirina obruca:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarSirina"
+                android:layout_width="172dp"
+                android:layout_height="match_parent"
+                android:textSize="25sp"
+                tools:text="Normalna" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextOsobina"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Osobobina obruca:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarOsobina"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Mekan" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextPodloga"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Podloga:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarPodlogaK"
+                android:layout_width="76dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Guma" />
+
+            <TextView
+                android:id="@+id/TextMrezica"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Mrezica:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarMrezica"
+                android:layout_width="102dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Ima" />
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextVisina"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Visina obruca:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarVisina"
+                android:layout_width="252dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="305cm" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextPosecenost"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Posecenost:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarPosecenost"
+                android:layout_width="213dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Velika" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextDimenzije"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Dimenzije:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarDimenzije"
+                android:layout_width="242dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Standard" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextMreza"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Mreza:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarMreza"
+                android:layout_width="73dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Ima" />
+
+            <TextView
+                android:id="@+id/TextGolovi"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Golovi:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarGolovi"
+                android:layout_width="148dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Normalni" />
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/TextPodlogaF"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Podloga:"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/komentarPodlogaF"
+                android:layout_width="252dp"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                tools:text="Trava" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/komentarLatituda"
+                android:layout_width="149dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="45dp"
+                android:text="Latituda"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/konetarLongituda"
+                android:layout_width="168dp"
+                android:layout_height="match_parent"
+                android:text="Longituda"
+                android:textSize="25sp" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/komentarOcena"

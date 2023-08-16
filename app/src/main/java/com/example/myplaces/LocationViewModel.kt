@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel
 class LocationViewModel: ViewModel() {
 
     private val _nazivMesta=MutableLiveData<String>("")
+    private val _baza=MutableLiveData<Boolean>(false)
     val nazivMesta:LiveData<String>
     get()=_nazivMesta
+    val baza:LiveData<Boolean>
+        get()=_baza
     private val _longitude=MutableLiveData<String>("")
     val longitude:LiveData<String>
         get()=_longitude
@@ -28,11 +31,12 @@ class LocationViewModel: ViewModel() {
     //    setLocation=false
 
     }
-    fun setLocationAndName(lon:String,lat:String,NazivMesta:String)
+    fun setLocationAndName(lon:String,lat:String,NazivMesta:String,base:Boolean)
     {
         _longitude.value=lon
         _latitude.value=lat
         _nazivMesta.value=NazivMesta
+        _baza.value=base
 
     }
    private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
