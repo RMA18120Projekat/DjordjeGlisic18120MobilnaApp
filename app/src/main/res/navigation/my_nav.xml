@@ -218,5 +218,19 @@
         <action
             android:id="@+id/action_komentarOcenaFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_komentarOcenaFragment_to_komentariMestaFragment"
+            app:destination="@id/komentariMestaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/komentariMestaFragment"
+        android:name="com.example.myplaces.KomentariMestaFragment"
+        android:label="fragment_komentari_mesta"
+        tools:layout="@layout/fragment_komentari_mesta" >
+        <action
+            android:id="@+id/action_komentariMestaFragment_to_komentarOcenaFragment"
+            app:destination="@id/komentarOcenaFragment"
+            app:popUpTo="@id/komentarOcenaFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

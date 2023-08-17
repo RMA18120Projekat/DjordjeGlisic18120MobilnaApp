@@ -226,7 +226,7 @@
 
             <TextView
                 android:id="@+id/komentarVisina"
-                android:layout_width="252dp"
+                android:layout_width="197dp"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
                 tools:text="305cm" />
@@ -395,6 +395,11 @@
                 android:layout_height="match_parent"
                 android:text="Nazad" />
         </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonSviKomentari"
+            android:text="Vidi sve komentare o mestu"/>
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

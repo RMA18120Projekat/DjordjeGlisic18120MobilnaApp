@@ -21,6 +21,7 @@ import org.w3c.dom.Text
 class KomentarOcenaFragment : Fragment() {
 private  lateinit var nazad:Button
 private lateinit var posalji:Button
+private lateinit var sviKomentari:Button
 private lateinit var otvoriMape:Button
 private lateinit var komentar:EditText
 private lateinit var ocena:EditText
@@ -71,6 +72,8 @@ private lateinit var buttonInfo:Button
         //INICIJALIZACIJA PROMENLJIVIH KOMPONENTAMA
         nazad=view.findViewById(R.id.komentarNazad)
         posalji=view.findViewById(R.id.komentarPosalji)
+        sviKomentari=view.findViewById(R.id.buttonSviKomentari)
+        sviKomentari.isEnabled=false
         komentar=view.findViewById(R.id.editKomentar)
         ocena=view.findViewById(R.id.komentarOcena)
         latituda=view.findViewById(R.id.komentarLatituda)
@@ -102,6 +105,8 @@ private lateinit var buttonInfo:Button
         locationViewModel.latitude.observe(viewLifecycleOwner,latiObserver)
         val nazivObserver= Observer<String> {newValue->
             naziv.text=newValue.toString()
+            //locationViewModel.nazivMesta=newValue.toString()
+            sviKomentari.isEnabled=true
         }
         locationViewModel.nazivMesta.observe(viewLifecycleOwner,nazivObserver)
         //INICIJALIZACIJA KOMPONENATA ZA PRIKAZ IZ BAZE
@@ -309,6 +314,10 @@ private lateinit var buttonInfo:Button
                     Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
                 }
             }
+        }
+        sviKomentari.setOnClickListener{
+            sharedViewModel.izabranoMesto=naziv.text.toString()
+            findNavController().navigate(R.id.action_komentarOcenaFragment_to_komentariMestaFragment)
         }
         return view
     }
