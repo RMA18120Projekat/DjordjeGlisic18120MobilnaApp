@@ -95,6 +95,9 @@
         <action
             android:id="@+id/action_homeFragment_to_komentarOcenaFragment"
             app:destination="@id/komentarOcenaFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_svojiKomentariFragment"
+            app:destination="@id/svojiKomentariFragment" />
     </fragment>
     <fragment
         android:id="@+id/mojaMestaFragment"
@@ -231,6 +234,17 @@
             android:id="@+id/action_komentariMestaFragment_to_komentarOcenaFragment"
             app:destination="@id/komentarOcenaFragment"
             app:popUpTo="@id/komentarOcenaFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/svojiKomentariFragment"
+        android:name="com.example.myplaces.SvojiKomentariFragment"
+        android:label="fragment_svoji_komentari"
+        tools:layout="@layout/fragment_svoji_komentari" >
+        <action
+            android:id="@+id/action_svojiKomentariFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>

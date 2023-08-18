@@ -73,7 +73,6 @@ private lateinit var buttonInfo:Button
         nazad=view.findViewById(R.id.komentarNazad)
         posalji=view.findViewById(R.id.komentarPosalji)
         sviKomentari=view.findViewById(R.id.buttonSviKomentari)
-        sviKomentari.isEnabled=false
         komentar=view.findViewById(R.id.editKomentar)
         ocena=view.findViewById(R.id.komentarOcena)
         latituda=view.findViewById(R.id.komentarLatituda)
@@ -86,8 +85,9 @@ private lateinit var buttonInfo:Button
         progresSlika=view.findViewById(R.id.slikaProgres)
 
         //SUBSKRAJBOVANJE NA PROMENE KOORDINATA
-        val bazaObserver=Observer<Boolean>{newVale->
-            buttonInfo.isEnabled=newVale
+        val bazaObserver=Observer<Boolean>{newValue->
+            buttonInfo.isEnabled=newValue
+            sviKomentari.isEnabled=newValue
         }
         locationViewModel.baza.observe(viewLifecycleOwner,bazaObserver)
         val lonObserver= Observer<String>{newValue->
@@ -106,7 +106,7 @@ private lateinit var buttonInfo:Button
         val nazivObserver= Observer<String> {newValue->
             naziv.text=newValue.toString()
             //locationViewModel.nazivMesta=newValue.toString()
-            sviKomentari.isEnabled=true
+
         }
         locationViewModel.nazivMesta.observe(viewLifecycleOwner,nazivObserver)
         //INICIJALIZACIJA KOMPONENATA ZA PRIKAZ IZ BAZE
@@ -288,9 +288,10 @@ private lateinit var buttonInfo:Button
             else
             {
                 progress.visibility=View.VISIBLE
-                var id =DataBase.databaseComments.push().key
-                var koment:Comments= Comments(id.toString(),sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString(),0,0)
-                DataBase.databaseComments.child(id.toString()).setValue(koment).addOnCompleteListener{
+                var id =naziv.text.toString()+ocena.text.toString()+komentar.text.toString()+sharedViewModel.ime.toString()
+                id= id.replace(".", "").replace("#", "").replace("$", "").replace("[", "").replace("]", "").replace("@","")
+                var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString())
+                DataBase.databaseComments.child(id).setValue(koment).addOnCompleteListener{
                     Toast.makeText(context,"Uspesno ste dodali komentar",Toast.LENGTH_SHORT).show()
                     progress.visibility=View.GONE
                     DataBase.id=DataBase.id+1
@@ -304,7 +305,8 @@ private lateinit var buttonInfo:Button
                             DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
                                 .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
                                 Toast.makeText(context,"Dobili ste jos 5 bodova",Toast.LENGTH_SHORT).show()
-
+                                ocena.text.clear()
+                                komentar.text.clear()
                                 }.addOnFailureListener {
                                 Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
                             }

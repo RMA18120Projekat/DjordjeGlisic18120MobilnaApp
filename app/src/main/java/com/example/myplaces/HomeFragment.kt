@@ -35,13 +35,13 @@ class HomeFragment : Fragment() {
     val storage = FirebaseStorage.getInstance()
     lateinit var ucitaj:ProgressBar
     val storageRef = storage.reference
-    //val imageRef=storageRef.child(sharedViewModel.img)
     private lateinit var storageReference: StorageReference
     lateinit var mojaMesta:Button
     lateinit var dodajMesto:Button
     lateinit var mape:ImageView
     lateinit var profilna:ImageView
     lateinit var komentarisiMesto:Button
+    lateinit var svojiKomentari:Button
 
     private lateinit var prezimeBaza:TextView
     override fun onCreateView(
@@ -108,7 +108,10 @@ class HomeFragment : Fragment() {
         komentarisiMesto.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_komentarOcenaFragment)
         }
-
+        svojiKomentari=view.findViewById(R.id.buttonSvojiKomentari)
+        svojiKomentari.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_svojiKomentariFragment)
+        }
         return view
     }
 

@@ -20,6 +20,35 @@ class KorisnikViewModel: ViewModel() {
     private var myPlaces: ArrayList<Places> = ArrayList()
     private var svoje:ArrayList<Places> = ArrayList()
     private var tudje:ArrayList<Places> = ArrayList()
+    private var nizKomentara:ArrayList<Comments> = ArrayList()
+    private var nizKljuceva:ArrayList<String> = ArrayList()
+    private var nizMesnihKomentara:ArrayList <Comments> =ArrayList()
+
+    fun getNizMesnihKomentara():ArrayList<Comments>
+    {
+        return nizMesnihKomentara
+    }
+    fun setNizMesnihKomentara(niz:ArrayList<Comments>)
+    {
+        nizKomentara=niz
+    }
+    fun getNizKomentara():ArrayList<Comments>
+    {
+        return nizKomentara
+    }
+    fun setNizKomentara(niz:ArrayList<Comments>)
+    {
+        nizKomentara=niz
+    }
+    fun getNizKljuceva():ArrayList<String>
+    {
+        return nizKljuceva
+    }
+    fun setNizKljuceva(niz:ArrayList<String>)
+    {
+        nizKljuceva=niz
+    }
+
 
     fun getMyPlaces(): ArrayList<Places> {
         return myPlaces
@@ -67,9 +96,58 @@ class KorisnikViewModel: ViewModel() {
                 Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
             }
         })
+        DataBase.databaseComments.addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                nizKomentara.clear()
+                for(commentSnapshot in snapshot.children)
+                {
 
 
+                    val comment=commentSnapshot.getValue(Comments::class.java)
+                    comment?.let {
+                        if(it.autor.toString()==ime.toString())
+                        {
+                            nizKomentara.add(it)
+                            nizKljuceva.add(it.id)
+
+                        }
+                    }
+
+
+                }
+
+            }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
+                }
+
+        })
+        DataBase.databaseComments.addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                nizMesnihKomentara.clear()
+                for(commentSnapshot in snapshot.children)
+                {
+
+
+                    val comment=commentSnapshot.getValue(Comments::class.java)
+                    comment?.let {
+
+                            nizMesnihKomentara.add(it)
+
+
+                    }
+
+
+                }
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
+            }
+
+        })
     }
+
 
 
 }

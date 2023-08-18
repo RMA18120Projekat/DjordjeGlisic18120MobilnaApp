@@ -113,6 +113,12 @@
             android:layout_height="48dp"
 
             android:text="Dodaj komentar i ocenu objektu" />
+        <Button
+            android:id="@+id/buttonSvojiKomentari"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+
+            android:text="Vidi sve svoje komentare" />
 
 
         <Button
