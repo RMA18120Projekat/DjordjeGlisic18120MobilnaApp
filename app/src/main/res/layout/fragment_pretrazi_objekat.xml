@@ -41,6 +41,21 @@
         android:inputType="text"
         android:textAlignment="textStart"
         android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Unesite latitudu"
+            android:id="@+id/filterLatituda"/>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Unesite longitudu"
+            android:id="@+id/filterLongituda"/>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -465,6 +480,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="30dp"
                     android:text="Dimenzije"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="Datum dodavaja mesta"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="Datum poslednjeg komentara"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:textAlignment="center"
