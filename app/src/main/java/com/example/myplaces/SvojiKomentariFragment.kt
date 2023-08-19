@@ -108,6 +108,13 @@ val sharedViewModel:KorisnikViewModel by activityViewModels()
             komentar.layoutParams=layoutParams
             komentar.text=clan.komentar.toString()
             komentar.textSize=20f
+            var datumVreme=TextView(context)
+            datumVreme.layoutParams=LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            datumVreme.text=clan.datum+" u "+clan.vreme
+            datumVreme.textSize=20f
             var obrisi=Button(context)
             var layoutParamsButton=LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -130,6 +137,7 @@ val sharedViewModel:KorisnikViewModel by activityViewModels()
             layout.addView(ocena)
             layout.addView(komentarText)
             layout.addView(komentar)
+            layout.addView(datumVreme)
             layout.addView(obrisi)
             layout.setBackgroundColor(Color.parseColor("#C5BCC6"))
 

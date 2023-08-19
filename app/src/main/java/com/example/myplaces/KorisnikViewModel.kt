@@ -17,12 +17,16 @@ class KorisnikViewModel: ViewModel() {
     var latituda=""
     var user:User=User()
     var place:Places=Places()
+    //MESTA sva,svoja,tudja
     private var myPlaces: ArrayList<Places> = ArrayList()
     private var svoje:ArrayList<Places> = ArrayList()
     private var tudje:ArrayList<Places> = ArrayList()
+    private var nizFiltriranihMesta : ArrayList<Places> = ArrayList()
+    //KOMENTARI SVI ZA MESTO(MADA SE TO KASNIJE PROVERAVA),SVI KLJUCEVI ZA SVI KOMENTARI I SVI ZA JEDNO MESTO(TO SE ODMAH PROVERAVA)
     private var nizKomentara:ArrayList<Comments> = ArrayList()
     private var nizKljuceva:ArrayList<String> = ArrayList()
     private var nizMesnihKomentara:ArrayList <Comments> =ArrayList()
+
 
     fun getNizMesnihKomentara():ArrayList<Comments>
     {
@@ -69,6 +73,13 @@ class KorisnikViewModel: ViewModel() {
     }
     fun getTudje(): ArrayList<Places> {
         return tudje
+    }
+
+    fun setFiltriranaMesta(newFM: ArrayList<Places>) {
+        nizFiltriranihMesta = newFM
+    }
+    fun getNizFIltriranihMesta(): ArrayList<Places> {
+        return nizFiltriranihMesta
     }
 
 

@@ -42,6 +42,7 @@ class HomeFragment : Fragment() {
     lateinit var profilna:ImageView
     lateinit var komentarisiMesto:Button
     lateinit var svojiKomentari:Button
+    lateinit var pretrazi:Button
 
     private lateinit var prezimeBaza:TextView
     override fun onCreateView(
@@ -111,6 +112,10 @@ class HomeFragment : Fragment() {
         svojiKomentari=view.findViewById(R.id.buttonSvojiKomentari)
         svojiKomentari.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_svojiKomentariFragment)
+        }
+        pretrazi=view.findViewById(R.id.buttonPretraziObjekat)
+        pretrazi.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_pretraziObjekatFragment)
         }
         return view
     }

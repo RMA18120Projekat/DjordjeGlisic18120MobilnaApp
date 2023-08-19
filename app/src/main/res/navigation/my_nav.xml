@@ -98,6 +98,9 @@
         <action
             android:id="@+id/action_homeFragment_to_svojiKomentariFragment"
             app:destination="@id/svojiKomentariFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_pretraziObjekatFragment"
+            app:destination="@id/pretraziObjekatFragment" />
     </fragment>
     <fragment
         android:id="@+id/mojaMestaFragment"
@@ -177,6 +180,11 @@
             app:destination="@id/komentarOcenaFragment"
             app:popUpTo="@id/komentarOcenaFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapFragment_to_pretraziObjekatFragment"
+            app:destination="@id/pretraziObjekatFragment"
+            app:popUpTo="@id/pretraziObjekatFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/infoFragment"
@@ -224,6 +232,11 @@
         <action
             android:id="@+id/action_komentarOcenaFragment_to_komentariMestaFragment"
             app:destination="@id/komentariMestaFragment" />
+        <action
+            android:id="@+id/action_komentarOcenaFragment_to_pretraziObjekatFragment"
+            app:destination="@id/pretraziObjekatFragment"
+            app:popUpTo="@id/pretraziObjekatFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/komentariMestaFragment"
@@ -246,5 +259,22 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/pretraziObjekatFragment"
+        android:name="com.example.myplaces.PretraziObjekatFragment"
+        android:label="fragment_pretrazi_objekat"
+        tools:layout="@layout/fragment_pretrazi_objekat" >
+        <action
+            android:id="@+id/action_pretraziObjekatFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_pretraziObjekatFragment_to_komentarOcenaFragment"
+            app:destination="@id/komentarOcenaFragment" />
+        <action
+            android:id="@+id/action_pretraziObjekatFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 </navigation>

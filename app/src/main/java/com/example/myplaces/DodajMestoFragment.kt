@@ -35,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.w3c.dom.Text
 import java.io.ByteArrayOutputStream
+import java.util.Calendar
 
 
 class DodajMestoFragment : Fragment() {
@@ -355,6 +356,7 @@ class DodajMestoFragment : Fragment() {
             locationViewModel.samoPregled=false
 
             findNavController().navigate(R.id.action_dodajMestoFragment_to_mapFragment)
+
         }
         ///////////////////////////////////////////////////////////////////////////////
         potvrdi.setOnClickListener {
@@ -363,6 +365,12 @@ class DodajMestoFragment : Fragment() {
                 val opisPom = opisMesta.text.toString()
                 val ocenaPom = ocenaMesta.text.toString()
                 if (nazivPom.isNotEmpty() && opisPom.isNotEmpty() && ocenaPom.isNotEmpty()) {
+                    var instanca= Calendar.getInstance()
+                    var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(
+                        Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
+                    var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(
+                        Calendar.MINUTE)
+                    var datumVreme=datum+" u "+vreme
                     progress.visibility = View.VISIBLE
                     if (terenIzabran == "Fudbalski") {
 
@@ -384,7 +392,8 @@ class DodajMestoFragment : Fragment() {
                             mrezaIzabrana,
                             goloviIzabrana,
                             podlogaFIzabrana,
-                            imgUrl
+                            imgUrl,
+                            datumVreme
                         )
 
                     } else {
@@ -407,7 +416,8 @@ class DodajMestoFragment : Fragment() {
                             "",
                             "",
                             "",
-                            imgUrl
+                            imgUrl,
+                            datumVreme
                         )
                     }
 

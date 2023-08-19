@@ -93,6 +93,13 @@ class KomentariMestaFragment : Fragment() {
                 komentar.layoutParams=layoutParams
                 komentar.text=clan.komentar.toString()
                 komentar.textSize=20f
+                var datumVreme=TextView(context)
+                datumVreme.layoutParams=LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                datumVreme.text=clan.datum+" u "+clan.vreme
+                datumVreme.textSize=20f
                 var odvajac=Button(context)
                 var layoutParamsDugme=LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -107,6 +114,7 @@ class KomentariMestaFragment : Fragment() {
                 layout.addView(ocena)
                 layout.addView(komentarText)
                 layout.addView(komentar)
+                layout.addView(datumVreme)
                 layout.addView(odvajac)
                 layout.setBackgroundColor(Color.parseColor("#C5BCC6"))
 

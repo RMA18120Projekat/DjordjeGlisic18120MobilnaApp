@@ -138,6 +138,8 @@ class MapFragment : Fragment() {
         map.overlays.add(overlayEvents)
 
     }
+
+
     private fun obeleziSveObjekteNaMapi()
     {
 
@@ -308,6 +310,7 @@ class MapFragment : Fragment() {
                 dozvoliKlikNaTudjiObjekat()
                 setMyLocationOverlay()
             }
+
             else
             {
                 setMyLocationOverlay()

@@ -1,6 +1,7 @@
 package com.example.myplaces
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import org.w3c.dom.Text
+import java.util.Calendar
 
 
 class KomentarOcenaFragment : Fragment() {
@@ -290,7 +292,10 @@ private lateinit var buttonInfo:Button
                 progress.visibility=View.VISIBLE
                 var id =naziv.text.toString()+ocena.text.toString()+komentar.text.toString()+sharedViewModel.ime.toString()
                 id= id.replace(".", "").replace("#", "").replace("$", "").replace("[", "").replace("]", "").replace("@","")
-                var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString())
+                var instanca= Calendar.getInstance()
+                var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
+                var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
+                var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString(),datum,vreme)
                 DataBase.databaseComments.child(id).setValue(koment).addOnCompleteListener{
                     Toast.makeText(context,"Uspesno ste dodali komentar",Toast.LENGTH_SHORT).show()
                     progress.visibility=View.GONE
@@ -307,6 +312,21 @@ private lateinit var buttonInfo:Button
                                 Toast.makeText(context,"Dobili ste jos 5 bodova",Toast.LENGTH_SHORT).show()
                                 ocena.text.clear()
                                 komentar.text.clear()
+                                DataBase.databasePlaces.child(naziv.text.toString()).get().addOnSuccessListener {
+                                    sna->
+                                    if(sna.exists())
+                                    {
+                                        var mesto:Places=Places(sna.child("naziv").value.toString(),sna.child("komentar").value.toString(),sna.child("ocena").value.toString().toInt(),sna.child("autor").value.toString(),sna.child("longituda").value.toString(),sna.child("latituda").value.toString(),sna.child("teren").value.toString(),sna.child("sirinaObruca").value.toString(),sna.child("osobinaObruca").value.toString(),sna.child("podlogaKosarka").value.toString(),sna.child("visinaKosa").value.toString(),sna.child("mrezica").value.toString(),sna.child("posecenost").value.toString(),sna.child("dimenzije").value.toString(),sna.child("mreza").value.toString(),sna.child("golovi").value.toString(),sna.child("podlogaFudbal").value.toString(),sna.child("img").value.toString(),sna.child("datumVreme").value.toString())
+                                        var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
+                                        var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
+                                        var datumVreme=datum+" u "+vreme
+                                        mesto.datumInterakcije=datumVreme
+                                        DataBase.databasePlaces.child(naziv.text.toString()).setValue(mesto).addOnSuccessListener {
+
+                                        }
+                                    }
+
+                                }
                                 }.addOnFailureListener {
                                 Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
                             }

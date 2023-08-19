@@ -57,4 +57,67 @@
         <item> manja od 305cm </item>
         <item>veca od 305cm </item>
     </string-array>
+    <string-array name="sirinaObrucaFilter">
+       <item>Nista</item>
+        <item>Normalna sirina</item>
+        <item>Sirok</item>
+        <item>Uzak</item>
+    </string-array>
+    <string-array name="osobinaObrucaFilter">
+        <item>Nista</item>
+        <item>Normalan osecaj</item>
+        <item>Tvrd</item>
+        <item>Mekan</item>
+    </string-array>
+    <string-array name="terenFilter">
+        <item>Nista</item>
+        <item>Fudbalski</item>
+        <item>Kosarkaski</item>
+    </string-array>
+    <string-array name="podlogaKFilter">
+        <item>Nista</item>
+        <item>Guma</item>
+        <item>Beton</item>
+        <item>Laminat</item>
+    </string-array>
+    <string-array name="mrezicaFilter">
+        <item>Nista</item>
+        <item>Ima</item>
+        <item>Nema</item>
+    </string-array>
+    <string-array name="posecenostFilter">
+        <item>Nista</item>
+        <item>Mala</item>
+        <item>Srednja</item>
+        <item>Velika</item>
+    </string-array>
+    <string-array name="dimenzijeFilter">
+        <item>Nista</item>
+        <item>Male</item>
+        <item>Standard</item>
+        <item>Vece</item>
+    </string-array>
+    <string-array name="mrezaFilter">
+        <item>Nista</item>
+        <item>Ima</item>
+        <item>Nema</item>
+    </string-array>
+    <string-array name="goloviFilter">
+        <item>Nista</item>
+        <item>Manji</item>
+        <item>Standard</item>
+        <item>Veci</item>
+    </string-array>
+    <string-array name="podlogaFFilter">
+        <item>Nista</item>
+        <item>Trava</item>
+        <item>Beton</item>
+        <item>Guma</item>
+    </string-array>
+    <string-array name="KoseviFilter">
+        <item>Nista</item>
+        <item>305cm</item>
+        <item> manja od 305cm </item>
+        <item>veca od 305cm </item>
+    </string-array>
 </resources>

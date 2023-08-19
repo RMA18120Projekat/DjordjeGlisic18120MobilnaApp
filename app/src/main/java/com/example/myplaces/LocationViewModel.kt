@@ -23,6 +23,7 @@ class LocationViewModel: ViewModel() {
     var samoPregled:Boolean=false
     var jedanObjekat:Boolean=false
     var komentarisiObjekat:Boolean=false
+
     // i sa neki od nji bude true zavisno od dugme na koje se klikne
     fun setLocation(lon:String,lat:String)
     {
