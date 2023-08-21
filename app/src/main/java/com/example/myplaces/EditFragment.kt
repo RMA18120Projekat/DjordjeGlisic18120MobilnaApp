@@ -45,7 +45,7 @@ class EditFragment : Fragment() {
     lateinit var checkBox:CheckBox
     lateinit var database: DatabaseReference
     lateinit var auth: FirebaseAuth
-    lateinit var imgUrl:String
+    var imgUrl:String=""
     private val REQUEST_IMAGE_CAPTURE = 1
     private lateinit var storageRef: StorageReference
     lateinit var user:User
@@ -83,27 +83,14 @@ class EditFragment : Fragment() {
         back.setOnClickListener{
             findNavController().navigate(R.id.action_editFragment_to_homeFragment)
         }
-        var menjajNovu:Boolean=false
-        checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-               if (isChecked)
-               {
-                   menjajNovu=true
 
-               }
-                else
-               {
-                   menjajNovu=false
-               }
-
-            }
-        })
 
         if(sharedViewModel.user.img!="")
         {
             Glide.with(requireContext())
                 .load(sharedViewModel.user.img)
                 .into(imageView)
+            imgUrl=sharedViewModel.user.img.toString()
         }
         storageRef = FirebaseStorage.getInstance().reference
         // KLIK NA DUGME I UZ DOZVOLU POKRETANJE KAMERE
@@ -128,15 +115,12 @@ class EditFragment : Fragment() {
             progress.visibility = View.VISIBLE
             var korisnicko = korisnickoIme.text.toString()
             var sifra = pass.text.toString()
-            Toast.makeText(context,"Uneli ste ${sifra}  a vasa sifra je ${sharedViewModel.user.sifra}",Toast.LENGTH_SHORT)
-            var newSifra=passN.text.toString()
-            var newSifraC=passC.text.toString()
             var name = ime.text.toString()
             var surname = prezime.text.toString()
             var numberPhone = brojTelefona.text.toString()
-            user=User(korisnicko,sifra,name,surname,numberPhone.toLongOrNull(),imgUrl)
+            user=User(korisnicko,sifra,name,surname,numberPhone.toLongOrNull(),imgUrl,ArrayList(),sharedViewModel.user.bodovi)
             //AZURIRANJE SPOREDNIH(NE KLJUCNIH ATRIBUTA)
-            if(korisnicko==sharedViewModel.user.korisnicko&&menjajNovu==false&&pass.text.toString()==user.sifra)
+            if(korisnicko==sharedViewModel.user.korisnicko&&pass.text.toString()==sharedViewModel.user.sifra)
             {
 
 
@@ -175,7 +159,8 @@ class EditFragment : Fragment() {
                     "ime" to user.ime,
                     "prezime" to user.prezime,
                     "brojTelefona" to user.brojTelefona,
-                    "img" to user.img
+                    "img" to user.img,
+                    "bodovi" to user.bodovi
                 )
             )
             database.updateChildren(userUpdates).addOnSuccessListener {

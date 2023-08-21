@@ -17,6 +17,7 @@ class KorisnikViewModel: ViewModel() {
     var latituda=""
     var user:User=User()
     var place:Places=Places()
+    private var users:ArrayList<User> = ArrayList()
     //MESTA sva,svoja,tudja
     private var myPlaces: ArrayList<Places> = ArrayList()
     private var svoje:ArrayList<Places> = ArrayList()
@@ -27,7 +28,14 @@ class KorisnikViewModel: ViewModel() {
     private var nizKljuceva:ArrayList<String> = ArrayList()
     private var nizMesnihKomentara:ArrayList <Comments> =ArrayList()
 
-
+    fun getUsers():ArrayList<User>
+    {
+        return users
+    }
+    fun setUsers(u:ArrayList<User>)
+    {
+        users=u
+    }
     fun getNizMesnihKomentara():ArrayList<Comments>
     {
         return nizMesnihKomentara
@@ -86,7 +94,26 @@ class KorisnikViewModel: ViewModel() {
 
     init
     {
+        DataBase.databaseUsers.addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val updatedUsers= ArrayList<User>()
+                for(korisnik in snapshot.children)
+                {
+                    val el=korisnik.getValue(User::class.java)
+                    el?.let {
+                        updatedUsers.add(it)
+                    }
+                }
+                users.clear()
+                users.addAll(updatedUsers)
 
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG,"Greska prilikom preuzimanja korisnika sa baze ${error.message}")
+            }
+        })
+        //SVA MESTA UZMI IZ BAZE
         DataBase.databasePlaces.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val updatedPlaces = ArrayList<Places>()
@@ -107,6 +134,7 @@ class KorisnikViewModel: ViewModel() {
                 Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
             }
         })
+        //SVI KOMENTARI UZMI IZ BAZE
         DataBase.databaseComments.addValueEventListener(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 nizKomentara.clear()
@@ -118,6 +146,7 @@ class KorisnikViewModel: ViewModel() {
                     comment?.let {
                         if(it.autor.toString()==ime.toString())
                         {
+                            //IZDVOJI SAMO KOJE JE TRENUTNI KORISNIK NAPISAO
                             nizKomentara.add(it)
                             nizKljuceva.add(it.id)
 
@@ -133,6 +162,7 @@ class KorisnikViewModel: ViewModel() {
                 }
 
         })
+        //SVE KOMENTARE IZ BAZE UZMI
         DataBase.databaseComments.addValueEventListener(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 nizMesnihKomentara.clear()
@@ -142,7 +172,7 @@ class KorisnikViewModel: ViewModel() {
 
                     val comment=commentSnapshot.getValue(Comments::class.java)
                     comment?.let {
-
+                            //IF ZA MESTO SPECIFICNO CE BITI NAPISAN KASNIJE
                             nizMesnihKomentara.add(it)
 
 

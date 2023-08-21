@@ -47,6 +47,7 @@ private  val sharedViewModel:KorisnikViewModel by activityViewModels()
 
     private lateinit var openCameraButton: Button
 private lateinit var imageView: ImageView
+private lateinit var cekajSliku:ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +65,7 @@ private lateinit var imageView: ImageView
         openCameraButton = view.findViewById(R.id.buttonPhoto)
         imageView = view.findViewById(R.id.imageView6)
         storageRef = FirebaseStorage.getInstance().reference
-
+        cekajSliku=view.findViewById(R.id.cekajSlikuReg)
 
         openCameraButton.setOnClickListener{
             if (checkCameraPermission()) {
@@ -148,7 +149,8 @@ private lateinit var imageView: ImageView
             imageView.setImageBitmap(imageBitmap)
             // Create a reference to the image file in Firebase Storage
             val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
-
+            imageView.visibility=View.GONE
+            cekajSliku.visibility=View.VISIBLE
             // Convert the bitmap to bytes
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -164,6 +166,8 @@ private lateinit var imageView: ImageView
                         // Save the URI to the database or use it as needed
                          imgUrl = uri.toString()
                       sharedViewModel.img=imgUrl
+                        cekajSliku.visibility=View.GONE
+                        imageView.visibility=View.VISIBLE
                         // Add the code to save the URL to the user's data in Firebase Database here
                     }.addOnFailureListener { exception ->
                         // Handle any errors that may occur while retrieving the download URL

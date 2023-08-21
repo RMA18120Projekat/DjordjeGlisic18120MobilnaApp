@@ -14,18 +14,23 @@
     android:id="@+id/pretrazi"
    >
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <EditText
         android:id="@+id/FilterNazivMesta"
-        android:layout_width="match_parent"
+        android:layout_width="133dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Naziv mesta"
         android:inputType="text"
         android:textAlignment="center" />
+
     <EditText
         android:id="@+id/FilterAutor"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Autor"
@@ -34,17 +39,20 @@
 
     <EditText
         android:id="@+id/FilterRadijus"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Radijus za pretrazivanje u metrima"
-        android:inputType="text"
+        android:hint="Radijus(m)"
+        android:inputType="number"
         android:textAlignment="textStart"
         android:textSize="18sp" />
+</LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,6 +64,7 @@
             android:hint="Unesite longitudu"
             android:id="@+id/filterLongituda"/>
     </LinearLayout>
+
 
 
     <LinearLayout
@@ -205,6 +214,30 @@
             android:textAlignment="center"
             android:entries="@array/dimenzijeFilter"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textRasvetaF"
+            android:text="Rasveta"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spinnerRasvetaF"
+            android:layout_width="272dp"
+            android:layout_height="27dp"
+            android:textAlignment="center"
+            android:entries="@array/rasvetaFilter"/>
+    </LinearLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/prosecanBrojLjudiF"
+        android:hint="Prosecan broj ljudi"
+        android:inputType="number"/>
+
 
 
 
@@ -502,12 +535,22 @@
                     android:textStyle="bold"
                     android:textAlignment="center"
                     />
+
             </TableRow>
 
         </TableLayout>
 </LinearLayout>
 </HorizontalScrollView>
 
+    <org.osmdroid.views.MapView
+        android:id="@+id/map2"
+        tilesource="Mapnik"
+        android:layout_width="785dp"
+        android:layout_height="865dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>
 

@@ -223,7 +223,7 @@ class MapFragment : Fragment() {
                     for(koordinate in locationViewModel.getKoordinate())
                     {
                         var objPoint=GeoPoint(koordinate.latituda,koordinate.longituda)
-                        if(endPoint.distanceToAsDouble(objPoint)<=30)
+                        if(endPoint.distanceToAsDouble(objPoint)<=60)
                         {
                             val lon = clickedPoint.longitude.toString()
                             val lati = clickedPoint.latitude.toString()

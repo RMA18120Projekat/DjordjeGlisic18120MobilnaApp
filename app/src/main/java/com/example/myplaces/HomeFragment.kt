@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
             database.child(key).get().addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     textIme.text = snapshot.child("ime").value.toString()
-                    sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toIntOrNull())
+                    sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toInt())
                     prezimeBaza.text=snapshot.child("prezime").value.toString()
                     val imageName=snapshot.child("img").value.toString()
                     if(imageName!="")
@@ -116,6 +116,10 @@ class HomeFragment : Fragment() {
         pretrazi=view.findViewById(R.id.buttonPretraziObjekat)
         pretrazi.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_pretraziObjekatFragment)
+        }
+        var vidiListuKorisnika=view.findViewById<Button>(R.id.buttonVidiListuKorisnika)
+        vidiListuKorisnika.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_rangListaFragment)
         }
         return view
     }

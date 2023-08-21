@@ -101,6 +101,9 @@
         <action
             android:id="@+id/action_homeFragment_to_pretraziObjekatFragment"
             app:destination="@id/pretraziObjekatFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_rangListaFragment"
+            app:destination="@id/rangListaFragment" />
     </fragment>
     <fragment
         android:id="@+id/mojaMestaFragment"
@@ -149,6 +152,9 @@
         <action
             android:id="@+id/action_detaljniFragment2_to_mapFragment2"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_detaljniFragment2_to_pretraziObjekatFragment"
+            app:destination="@id/pretraziObjekatFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -276,5 +282,19 @@
         <action
             android:id="@+id/action_pretraziObjekatFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_pretraziObjekatFragment_to_detaljniFragment2"
+            app:destination="@id/detaljniFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/rangListaFragment"
+        android:name="com.example.myplaces.RangListaFragment"
+        android:label="fragment_rang_lista"
+        tools:layout="@layout/fragment_rang_lista" >
+        <action
+            android:id="@+id/action_rangListaFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -98,6 +98,9 @@ class DodajMestoFragment : Fragment() {
     var podlogaFIzabrana:String="Trava"
     ////////////////////////////////
     private val locationViewModel:LocationViewModel by activityViewModels()
+    private lateinit var prosecanBrojLjudi:EditText
+    private lateinit var rasvetaSpinner: Spinner
+    private  var rasvetaIzabrana:String="Nema"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -132,6 +135,8 @@ class DodajMestoFragment : Fragment() {
         podlogaFText=view.findViewById(R.id.textPodlogaFudbal)
         kosevi=view.findViewById(R.id.spinnerKosevi)
         koseviText=view.findViewById(R.id.textKosevi)
+        prosecanBrojLjudi=view.findViewById(R.id.prosecanBrojLjudi)
+        rasvetaSpinner=view.findViewById(R.id.spinnerRasveta)
 
         ////////////////////////////////////////////////////////////////////////////////////////
         teren.onItemSelectedListener=object :AdapterView.OnItemSelectedListener{
@@ -270,6 +275,20 @@ class DodajMestoFragment : Fragment() {
                 dimenzijeIzabrana = adapterView?.getItemAtPosition(positon).toString()
             }
         }
+        rasvetaSpinner.onItemSelectedListener=object :AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(
+                adapterView: AdapterView<*>?,
+                view: View?,
+                positon: Int,
+                id: Long
+            ) {
+                rasvetaIzabrana = adapterView?.getItemAtPosition(positon).toString()
+            }
+        }
         mreza.onItemSelectedListener=object :AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -362,9 +381,9 @@ class DodajMestoFragment : Fragment() {
         potvrdi.setOnClickListener {
 
                 val nazivPom = nazivMesta.text.toString()
-                val opisPom = opisMesta.text.toString()
+                var opisPom = opisMesta.text.toString()
                 val ocenaPom = ocenaMesta.text.toString()
-                if (nazivPom.isNotEmpty() && opisPom.isNotEmpty() && ocenaPom.isNotEmpty()) {
+                if( (nazivPom.isNotEmpty() && ocenaPom.isNotEmpty()&&ocenaPom.toInt()>=5&&ocenaPom.toInt()<=10)||(nazivPom.isNotEmpty()&&ocenaPom.isNotEmpty()&&ocenaPom.toInt()<5&&ocenaPom.toInt()>=1&&opisPom.isNotEmpty()) ){
                     var instanca= Calendar.getInstance()
                     var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(
                         Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
@@ -372,11 +391,15 @@ class DodajMestoFragment : Fragment() {
                         Calendar.MINUTE)
                     var datumVreme=datum+" u "+vreme
                     progress.visibility = View.VISIBLE
+                    if(opisMesta.text.toString().isEmpty())
+                    {
+                        opisPom=""
+                    }
                     if (terenIzabran == "Fudbalski") {
 
                         mesto = Places(
                             nazivMesta.text.toString(),
-                            opisMesta.text.toString(),
+                            opisPom,
                             ocenaMesta.text.toString().toIntOrNull(),
                             sharedViewModel.ime,
                             longituda.text.toString(),
@@ -389,6 +412,8 @@ class DodajMestoFragment : Fragment() {
                             "",
                             posecenostIzabrana,
                             dimenzijeIzabrana,
+                            rasvetaIzabrana,
+                            prosecanBrojLjudi.text.toString().toIntOrNull(),
                             mrezaIzabrana,
                             goloviIzabrana,
                             podlogaFIzabrana,
@@ -400,7 +425,7 @@ class DodajMestoFragment : Fragment() {
 
                         mesto = Places(
                             nazivMesta.text.toString(),
-                            opisMesta.text.toString(),
+                            opisPom,
                             ocenaMesta.text.toString().toIntOrNull(),
                             sharedViewModel.ime,
                             longituda.text.toString(),
@@ -413,6 +438,8 @@ class DodajMestoFragment : Fragment() {
                             mrezicaIzabrana,
                             posecenostIzabrana,
                             dimenzijeIzabrana,
+                            rasvetaIzabrana,
+                            prosecanBrojLjudi.text.toString().toIntOrNull(),
                             "",
                             "",
                             "",
@@ -465,7 +492,8 @@ class DodajMestoFragment : Fragment() {
                         }
 
                 } else {
-                    Toast.makeText(context, "Niste popunili sva polja", Toast.LENGTH_SHORT).show()
+
+                    Toast.makeText(context, "Niste popunili sva polja, ako ste dali ocenu manju od 6 morate napisati komentar sta se treba ispraviti.Ocena je od 1-10", Toast.LENGTH_SHORT).show()
                 }
 
 

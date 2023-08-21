@@ -97,6 +97,10 @@ class DetaljniFragment : Fragment() {
 
     /////////////////////////////////////
     lateinit var pom:Places
+    private lateinit var prosecanBrojLjudi:EditText
+    private lateinit var rasvetaSpinner: Spinner
+    private  var rasvetaIzabrana:String="Nema"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -133,6 +137,13 @@ class DetaljniFragment : Fragment() {
         azuriraj=view.findViewById(R.id.buttonDodajMestoU)
         latituda=view.findViewById(R.id.Latituda)
         longituda=view.findViewById(R.id.Longituda)
+        prosecanBrojLjudi=view.findViewById(R.id.prosecanBrojLjudiU)
+        rasvetaSpinner=view.findViewById(R.id.spinnerRasvetaU)
+        var openCameraButton:Button=view.findViewById(R.id.buttonDodajKameromU)
+        var openGalleryButton:Button=view.findViewById(R.id.buttonDodajGalerijomU)
+
+
+
         //NA OTVARANJE STRANICE PREUZIMA SE IZ BAZE NEOPHODNO
         try {
             ucitaj.visibility=View.VISIBLE
@@ -144,6 +155,7 @@ class DetaljniFragment : Fragment() {
                     ocena.setText(snapshot.child("ocena").value.toString())
                     latituda.text=snapshot.child("latituda").value.toString()
                     longituda.text=snapshot.child("longituda").value.toString()
+                    prosecanBrojLjudi.setText(snapshot.child("prosecanBrojLjudi").value.toString())
                     sharedViewModel.latituda=latituda.text.toString()
                     sharedViewModel.longituda=longituda.text.toString()
                     imgUrl = snapshot.child("img").value.toString()
@@ -161,6 +173,13 @@ class DetaljniFragment : Fragment() {
                     if (dimenzijeIndex != -1) {
                         dimenzije.setSelection(dimenzijeIndex)
                     }
+                    val rasvetaNiz=resources.getStringArray(R.array.rasveta)
+                    val rasvetaIndex = rasvetaNiz.indexOf(snapshot.child("rasveta").value.toString())
+
+                    if (rasvetaIndex != -1) {
+                        rasvetaSpinner.setSelection(rasvetaIndex)
+                    }
+
                     val posecenostNiz=resources.getStringArray(R.array.posecenost)
                     val posecenostIndex = posecenostNiz.indexOf(snapshot.child("posecenost").value.toString())
 
@@ -498,19 +517,22 @@ class DetaljniFragment : Fragment() {
         }
         ///////////////////////////////////////////////////////////////////////////////
         azuriraj.setOnClickListener{
-            val Opis=opis.text.toString()
+            var Opis=opis.text.toString()
             val Ocena=ocena.text.toString()
-            if(Opis.isNotEmpty()&&Ocena.isNotEmpty()) {
+            if((ocena.text.toString().isNotEmpty()&&ocena.text.toString().toInt()>=5&&ocena.text.toString().toInt()<=10)||(ocena.text.toString().isNotEmpty()&&ocena.text.toString().toInt()<5&&ocena.text.toString().toInt()>=1&&opis.text.toString().isNotEmpty())) {
 
                 ucitaj.visibility = View.VISIBLE
                 val key = naziv.text.toString().replace(".", "").replace("#", "").replace("$", "")
                     .replace("[", "").replace("]", "")
-
+                if(Opis.isEmpty())
+                {
+                    Opis=""
+                }
                 val mesto = if(terenIzabran=="Fudbalski") {
-                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longituda.text.toString(), latituda.text.toString(),terenIzabran,"","","","","",posecenostIzabrana,dimenzijeIzabrana,mrezaIzabrana,goloviIzabrana,podlogaFIzabrana,imgUrl)
+                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longituda.text.toString(), latituda.text.toString(),terenIzabran,"","","","","",posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),mrezaIzabrana,goloviIzabrana,podlogaFIzabrana,imgUrl)
 
                 } else {
-                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longituda.text.toString(), latituda.text.toString(),terenIzabran,sirinaIzabrana,osobinaIzabrana,podlogaKIzabrana,koseviIzabrana,mrezicaIzabrana,posecenostIzabrana,dimenzijeIzabrana,"","","",imgUrl)
+                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longituda.text.toString(), latituda.text.toString(),terenIzabran,sirinaIzabrana,osobinaIzabrana,podlogaKIzabrana,koseviIzabrana,mrezicaIzabrana,posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),"","","",imgUrl)
                 }
                 DataBase.databasePlaces.child(key).setValue(mesto).addOnSuccessListener {
 
@@ -553,7 +575,7 @@ class DetaljniFragment : Fragment() {
             }
             else
             {
-                Toast.makeText(context,"Niste popunili sva polja", Toast.LENGTH_SHORT)
+                Toast.makeText(context,"Popunite  sva polja  ako ste dali ocenu manju od 5 obrazlozite.Ocena se daje od 1-10 za ocenu od 5-10 ne treba obrazlozenje", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -563,6 +585,20 @@ class DetaljniFragment : Fragment() {
                 Toast.makeText(context,"Uspesno ste obrisali mesto ${naziv.text.toString()}",Toast.LENGTH_LONG).show()
                azuriraj.visibility=View.GONE
                 obrisi.visibility=View.GONE
+                set.visibility=View.GONE
+                openCameraButton.visibility=View.GONE
+                openGalleryButton.visibility=View.GONE
+                for(komentar in sharedViewModel.getNizMesnihKomentara())
+                {
+                    if(komentar.mesto==naziv.text.toString())
+                    {
+                        DataBase.databaseComments.child(komentar.id.toString()).removeValue().addOnSuccessListener {
+
+                        }
+                            .addOnFailureListener { exception->Toast.makeText(context,exception.toString(),Toast.LENGTH_LONG).show() }
+                    }
+                }
+
 
                 DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "").replace("$", "")
                     .replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
@@ -595,7 +631,7 @@ class DetaljniFragment : Fragment() {
         }
 
         ///////////////////////////////////////////////////////////////////////////////
-        var openCameraButton:Button=view.findViewById(R.id.buttonDodajKameromU)
+
         openCameraButton.setOnClickListener{
             if (checkCameraPermission()) {
                 val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -611,7 +647,6 @@ class DetaljniFragment : Fragment() {
                 )
             }
         }
-        var openGalleryButton:Button=view.findViewById(R.id.buttonDodajGalerijomU)
 
         openGalleryButton.setOnClickListener{
             if (checkGalleryPermission()) {

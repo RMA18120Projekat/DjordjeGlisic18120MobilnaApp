@@ -58,7 +58,7 @@
         <item>veca od 305cm </item>
     </string-array>
     <string-array name="sirinaObrucaFilter">
-       <item>Nista</item>
+        <item>Nista</item>
         <item>Normalna sirina</item>
         <item>Sirok</item>
         <item>Uzak</item>
@@ -120,4 +120,18 @@
         <item> manja od 305cm </item>
         <item>veca od 305cm </item>
     </string-array>
+    <string-array name="rasveta">
+        <item>Nema</item>
+        <item>Slaba osvetljenost</item>
+        <item>Srednja osvetlejnost</item>
+        <item>Odlicna osvetljenost</item>
+    </string-array>
+    <string-array name="rasvetaFilter">
+        <item>Nista</item>
+        <item>Nema</item>
+        <item>Slaba osvetljenost</item>
+        <item>Srednja osvetlejnost</item>
+        <item>Odlicna osvetljenost</item>
+    </string-array>
+
 </resources>

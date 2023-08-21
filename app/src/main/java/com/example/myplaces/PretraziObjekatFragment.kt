@@ -1,5 +1,6 @@
 package com.example.myplaces
 
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -21,13 +22,29 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
+import org.osmdroid.config.Configuration
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import java.lang.Math.asin
+import java.lang.Math.cos
+import java.lang.Math.sin
+import java.lang.Math.sqrt
+import kotlin.math.pow
 
 class PretraziObjekatFragment : Fragment() {
     private  val sharedViewModel:KorisnikViewModel by activityViewModels()
     private val locationViewModel:LocationViewModel by activityViewModels()
+    private lateinit var map: MapView
+
     lateinit var nazivMesta: EditText
     lateinit var autor:EditText
     lateinit var komentarMesta: EditText
@@ -75,6 +92,12 @@ class PretraziObjekatFragment : Fragment() {
     private lateinit var longituda:EditText
     private lateinit var datumP:EditText
     private lateinit var datumI:EditText
+    private lateinit var tableLayout:TableLayout
+    ////////////////////////////////////////////
+    var markerPointList=ArrayList<Marker>()
+    private lateinit var prosecanBrojLjudi:EditText
+    private lateinit var rasvetaSpinner: Spinner
+    private  var rasvetaIzabrana:String="Nista"
 
 
     override fun onCreateView(
@@ -107,13 +130,16 @@ class PretraziObjekatFragment : Fragment() {
         podlogaFText=view.findViewById(R.id.FilterPodlogaFudbal)
         kosevi=view.findViewById(R.id.spinnerFilterKosevi)
         koseviText=view.findViewById(R.id.FilterKosevi)
-        val tableLayout = view.findViewById<TableLayout>(R.id.tabelaFilter) // Pristup TableLayout-u
+        tableLayout = view.findViewById<TableLayout>(R.id.tabelaFilter) // Pristup TableLayout-u
         tableLayout.visibility=View.GONE
         var nizFiltriranihMestaPom= ArrayList<Places> ()
         latituda=view.findViewById(R.id.filterLatituda)
         longituda=view.findViewById(R.id.filterLongituda)
         datumP=view.findViewById(R.id.FilterDatum)
         datumI=view.findViewById(R.id.FilterDatumI)
+        prosecanBrojLjudi=view.findViewById(R.id.prosecanBrojLjudiF)
+        rasvetaSpinner=view.findViewById(R.id.spinnerRasvetaF)
+
         teren.onItemSelectedListener=object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -258,6 +284,20 @@ class PretraziObjekatFragment : Fragment() {
 
             }
         }
+        rasvetaSpinner.onItemSelectedListener=object :AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemSelected(
+                adapterView: AdapterView<*>?,
+                view: View?,
+                positon: Int,
+                id: Long
+            ) {
+                rasvetaIzabrana = adapterView?.getItemAtPosition(positon).toString()
+            }
+        }
         mreza.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -315,6 +355,7 @@ class PretraziObjekatFragment : Fragment() {
             }
         }
         pretrazi.setOnClickListener {
+
             tableLayout.visibility = View.VISIBLE
             tableLayout.removeAllViews()
             val tableRow = TableRow(context)
@@ -328,8 +369,8 @@ class PretraziObjekatFragment : Fragment() {
                 "Latituda", "Longituda", "Teren", "Obruc sirina",
                 "Obruc osobina", "Kosarkaska podloga", "Mrezica",
                 "Visina kosa", "Mreza", "Golovi", "Podloga fudbal",
-                "Posecenost", "Dimenzije", "Datum dodavaja mesta",
-                "Datum poslednjeg komentara"
+                "Posecenost", "Dimenzije","Rasveta","Prosecan broj ljudi", "Datum dodavaja mesta",
+                "Datum poslednjeg komentara","Azuriranje","Komentarisanje"
             )
 
             // Dodavanje TextView elemenata u TableRow
@@ -406,6 +447,20 @@ class PretraziObjekatFragment : Fragment() {
                 nizFiltriranihMestaPom=nizFiltriranihMestaPom.filter {
                         place->
                     place.dimenzije==dimenzijeIzabrana.toString()
+                }as ArrayList<Places>
+            }
+            if(rasvetaIzabrana.toString()!="Nista")
+            {
+                nizFiltriranihMestaPom=nizFiltriranihMestaPom.filter {
+                        place->
+                    place.rasveta==rasvetaIzabrana.toString()
+                }as ArrayList<Places>
+            }
+            if(prosecanBrojLjudi.text.toString().isNotEmpty())
+            {
+                nizFiltriranihMestaPom=nizFiltriranihMestaPom.filter {
+                        place->
+                    place.prosecanBrojLjudi==prosecanBrojLjudi.text.toString().toInt()
                 }as ArrayList<Places>
             }
             if(posecenostIzabrana.toString()!="Nista")
@@ -507,57 +562,108 @@ class PretraziObjekatFragment : Fragment() {
                 }
             }
             sharedViewModel.setFiltriranaMesta(nizFiltriranihMestaPom)
-            for (mesto in nizFiltriranihMestaPom) {
-                val row = TableRow(context) // Kreiranje TableRow-a
-                val rowParams = TableLayout.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT
-                )
-                row.layoutParams = rowParams
-                row.setBackgroundColor(Color.parseColor("#F0F7F7"))
-                row.setPadding(5.dpToPx(), 5.dpToPx(), 5.dpToPx(), 5.dpToPx())
+            setUpMap()
+            if(radijus.text.toString().isEmpty()) {
 
-                val textParams = TableRow.LayoutParams(
-                    TableRow.LayoutParams.WRAP_CONTENT,
-                    TableRow.LayoutParams.WRAP_CONTENT
-                )
-                textParams.marginEnd = 30.dpToPx()
+                for (mesto in sharedViewModel.getNizFIltriranihMesta()) {
+                    val row = TableRow(context) // Kreiranje TableRow-a
+                    val rowParams = TableLayout.LayoutParams(
+                        TableLayout.LayoutParams.MATCH_PARENT,
+                        TableLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    row.layoutParams = rowParams
+                    row.setBackgroundColor(Color.parseColor("#F0F7F7"))
+                    row.setPadding(5.dpToPx(), 5.dpToPx(), 5.dpToPx(), 5.dpToPx())
 
-                val textArray = arrayOf(
-                    mesto.naziv,
-                    mesto.autor,
-                    mesto.komentar,
-                    mesto.ocena.toString(),
-                    mesto.latituda,
-                    mesto.longituda,
-                    mesto.teren,
-                    mesto.sirinaObruca,
-                    mesto.osobinaObruca,
-                    mesto.podlogaKosarka,
-                    mesto.mrezica,
-                    mesto.visinaKosa,
-                    mesto.mreza,
-                    mesto.golovi,
-                    mesto.podlogaFudbal,
-                    mesto.posecenost,
-                    mesto.dimenzije,
-                    mesto.datumVreme,
-                    mesto.datumInterakcije
+                    val textParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                    )
+                    textParams.marginEnd = 30.dpToPx()
+                    var azuriraj=Button(context)
+                    var komentarisi=Button(context)
+                    azuriraj.text="Azuriraj"
+                    komentarisi.text="Komentarisi"
+
+                    val textArray = arrayOf(
+                        mesto.naziv,
+                        mesto.autor,
+                        mesto.komentar,
+                        mesto.ocena.toString(),
+                        mesto.latituda,
+                        mesto.longituda,
+                        mesto.teren,
+                        mesto.sirinaObruca,
+                        mesto.osobinaObruca,
+                        mesto.podlogaKosarka,
+                        mesto.mrezica,
+                        mesto.visinaKosa,
+                        mesto.mreza,
+                        mesto.golovi,
+                        mesto.podlogaFudbal,
+                        mesto.posecenost,
+                        mesto.dimenzije,
+                        mesto.rasveta,
+                        mesto.prosecanBrojLjudi.toString(),
+                        mesto.datumVreme,
+                        mesto.datumInterakcije,
 
 
-                )
+                    )
 
-                for (textValue in textArray) {
-                    val textView = TextView(context)
-                    textView.layoutParams = textParams
-                    textView.text = textValue
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                    row.addView(textView)
+                    for (textValue in textArray) {
+                        val textView = TextView(context)
+                        textView.layoutParams = textParams
+                        textView.text = textValue
+                        textView.textAlignment=LinearLayout.TEXT_ALIGNMENT_CENTER
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                        row.addView(textView)
+                    }
+                    row.addView(azuriraj)
+                    row.addView(komentarisi)
+                    azuriraj.setOnClickListener{
+                        if(sharedViewModel.user.korisnicko==mesto.autor)
+                        {
+                            val x = map.overlays[0] as MyLocationNewOverlay
+                            var start = GeoPoint(
+                                x.lastFix.latitude,
+                                x.lastFix.longitude
+                            )
+                            val end=GeoPoint(mesto.latituda.toString().toDouble(),mesto.longituda.toString().toDouble())
+                            if(start.distanceToAsDouble(end)<1000) {
+                                sharedViewModel.izabranoMesto = mesto.naziv.toString()
+                                findNavController().navigate(R.id.action_pretraziObjekatFragment_to_detaljniFragment2)
+                            }
+                            else
+                            {
+                                Toast.makeText(context,"Ne mozete da komentarisite mesto jer Vam nije u blizini",Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Niste dodali to mesto ne mozete ga azurirati",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    komentarisi.setOnClickListener{
+                        if(sharedViewModel.user.korisnicko!=mesto.autor) {
+                            locationViewModel.setLocationAndName(
+                                mesto.longituda.toString(),
+                                mesto.latituda.toString(),
+                                mesto.naziv.toString(),
+                                true
+                            )
+                            findNavController().navigate(R.id.action_pretraziObjekatFragment_to_komentarOcenaFragment)
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Ovo mesto ste vi dodali s toga ga ne mozete komentarisati",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    tableLayout.addView(row)
+
+
                 }
-
-                tableLayout.addView(row)
-
-
             }
         }
 
@@ -567,6 +673,245 @@ class PretraziObjekatFragment : Fragment() {
         val density = resources.displayMetrics.density
         return (this * density).toInt()
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val ctx = activity?.applicationContext
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+        map = requireView().findViewById(R.id.map2)
+        map.setMultiTouchControls(true)
+
+
+        setupLocation()
+
+    }
+    private fun setupLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            val requestPermissionLauncher = registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    setMyLocationOverlay()
+
+                }
+            }
+
+            // Pokretanje zahtjeva za dozvolom
+            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            setUpMap()
+        }
+    }
+
+    private fun setMyLocationOverlay() {
+        val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+        myLocationOverlay.enableMyLocation()
+        map.overlays.add(myLocationOverlay)
+        map.controller.setCenter(myLocationOverlay.myLocation)
+        //uso sam u debug mod sa ce vidis kude puca
+        //nzm kvo se sa desi
+    }
+    private fun setUpMap() {
+        for (point in markerPointList) {
+            map.overlays.remove(point)
+        }
+        var startPoint: GeoPoint = GeoPoint(43.158495, 22.585555)
+        map.controller.setZoom(15.0)
+        if (radijus.text.toString().isEmpty()) {
+            setMyLocationOverlay()
+            for (mesto in sharedViewModel.getNizFIltriranihMesta()) {
+                var startTacka = GeoPoint(
+                    mesto.latituda.toString().toDouble(),
+                    mesto.longituda.toString().toDouble()
+                )
+                val marker = Marker(map)
+                marker.position = startTacka
+                marker.setAnchor(
+                    Marker.ANCHOR_CENTER,
+                    Marker.ANCHOR_BOTTOM
+                ) // Postavljanje tačke spajanja markera
+                marker.title = mesto.naziv
+                marker.subDescription = "Mesto je dodao:${mesto.autor}"
+                map.overlays.add(marker)
+                markerPointList.add(marker)
+                map.invalidate()
+
+            }
+        } else {
+            var noviFilter=ArrayList<Places>()
+            for (point in markerPointList) {
+                map.overlays.remove(point)
+            }
+            val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+            myLocationOverlay.enableMyLocation()
+            map.overlays.add(myLocationOverlay)
+            map.invalidate()
+            map.controller.setCenter(myLocationOverlay.myLocation)
+            val x = map.overlays[0] as MyLocationNewOverlay
+            var start = GeoPoint(
+                x.lastFix.latitude,
+                x.lastFix.longitude
+            )
+            for (mesto in sharedViewModel.getNizFIltriranihMesta()) {
+                var endPoint = GeoPoint(
+                    mesto.latituda.toString().toDouble(),
+                    mesto.longituda.toString().toDouble()
+                )
+                if (start.distanceToAsDouble(endPoint)<=radijus.text.toString().toDouble()) {
+                    Toast.makeText(requireContext(), "Objekat ${mesto.naziv}", Toast.LENGTH_SHORT).show()
+                    var startTacka = GeoPoint(
+                        mesto.latituda.toString().toDouble(),
+                        mesto.longituda.toString().toDouble()
+                    )
+                    val marker = Marker(map)
+                    marker.position = startTacka
+                    marker.setAnchor(
+                        Marker.ANCHOR_CENTER,
+                        Marker.ANCHOR_BOTTOM
+                    ) // Postavljanje tačke spajanja markera
+                    marker.title = mesto.naziv
+                    marker.subDescription = "Mesto je dodao:${mesto.autor}"
+                    map.overlays.add(marker)
+                    markerPointList.add(marker)
+                    map.invalidate()
+                    noviFilter.add(mesto)
+
+                }
+
+
+            }
+            sharedViewModel.setFiltriranaMesta(noviFilter)
+            crtajTabelu()
+
+        }
+
+        map.controller.animateTo(startPoint)
+    }
+
+private fun crtajTabelu()
+{
+    tableLayout.removeAllViews()
+    val tableRow = TableRow(context)
+    tableRow.setBackgroundColor(Color.parseColor("#51B435"))
+    tableRow.setPadding(10.dpToPx(), 10.dpToPx(), 10.dpToPx(), 10.dpToPx())
+    tableRow.gravity = Gravity.CENTER
+    // Lista sa sadržajem za TextView elemente
+    val labels = listOf(
+        "Naziv mesta", "Autor", "Opis", "Ocena",
+        "Latituda", "Longituda", "Teren", "Obruc sirina",
+        "Obruc osobina", "Kosarkaska podloga", "Mrezica",
+        "Visina kosa", "Mreza", "Golovi", "Podloga fudbal",
+        "Posecenost", "Dimenzije","Rasveta","Prosecan broj ljudi", "Datum dodavaja mesta",
+        "Datum poslednjeg komentara","Azuriranje","Komentarisanje"
+    )
+
+    // Dodavanje TextView elemenata u TableRow
+    for (label in labels) {
+        val textView = TextView(context)
+        textView.layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+        textView.text = label
+        textView.textSize = 20f
+        textView.setTypeface(null, Typeface.BOLD)
+        textView.setPadding(0, 0, 30.dpToPx(), 0)
+        textView.gravity = Gravity.CENTER
+        tableRow.addView(textView)
+    }
+
+    // Dodavanje TableRow u TableLayout
+
+    tableLayout.addView(tableRow)
+    for (mesto in sharedViewModel.getNizFIltriranihMesta()) {
+        val row = TableRow(context) // Kreiranje TableRow-a
+        val rowParams = TableLayout.LayoutParams(
+            TableLayout.LayoutParams.MATCH_PARENT,
+            TableLayout.LayoutParams.WRAP_CONTENT
+        )
+        row.layoutParams = rowParams
+        row.setBackgroundColor(Color.parseColor("#F0F7F7"))
+        row.setPadding(5.dpToPx(), 5.dpToPx(), 5.dpToPx(), 5.dpToPx())
+
+        val textParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+        textParams.marginEnd = 30.dpToPx()
+
+        val textArray = arrayOf(
+            mesto.naziv,
+            mesto.autor,
+            mesto.komentar,
+            mesto.ocena.toString(),
+            mesto.latituda,
+            mesto.longituda,
+            mesto.teren,
+            mesto.sirinaObruca,
+            mesto.osobinaObruca,
+            mesto.podlogaKosarka,
+            mesto.mrezica,
+            mesto.visinaKosa,
+            mesto.mreza,
+            mesto.golovi,
+            mesto.podlogaFudbal,
+            mesto.posecenost,
+            mesto.dimenzije,
+            mesto.rasveta,
+            mesto.prosecanBrojLjudi.toString(),
+            mesto.datumVreme,
+            mesto.datumInterakcije
+
+
+        )
+        var azuriraj=Button(context)
+        var komentarisi=Button(context)
+        azuriraj.text="Azuriraj"
+        komentarisi.text="Komentarisi"
+
+        for (textValue in textArray) {
+            val textView = TextView(context)
+            textView.layoutParams = textParams
+            textView.text = textValue
+            textView.textAlignment=LinearLayout.TEXT_ALIGNMENT_CENTER
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            row.addView(textView)
+        }
+        row.addView(azuriraj)
+        row.addView(komentarisi)
+        azuriraj.setOnClickListener{
+            if(sharedViewModel.user.korisnicko==mesto.autor)
+            {
+                sharedViewModel.izabranoMesto=mesto.naziv.toString()
+                findNavController().navigate(R.id.action_pretraziObjekatFragment_to_detaljniFragment2)
+            }
+            else
+            {
+                Toast.makeText(context,"Niste dodali to mesto ne mozete ga azurirati",Toast.LENGTH_SHORT).show()
+            }
+        }
+        komentarisi.setOnClickListener{
+            if(sharedViewModel.user.korisnicko!=mesto.autor) {
+                locationViewModel.setLocationAndName(
+                    mesto.longituda.toString(),
+                    mesto.latituda.toString(),
+                    mesto.naziv.toString(),
+                    true
+                )
+                findNavController().navigate(R.id.action_pretraziObjekatFragment_to_komentarOcenaFragment)
+            }
+            else
+            {
+                Toast.makeText(context,"Ovo mesto ste vi dodali s toga ga ne mozete komentarisati",Toast.LENGTH_SHORT).show()
+            }
+        }
+        tableLayout.addView(row)
+
+
+    }
+
+}
 
 
 

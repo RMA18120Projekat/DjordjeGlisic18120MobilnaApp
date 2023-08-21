@@ -43,6 +43,7 @@
         android:ems="10"
         android:gravity="center"
         android:hint="Ovde unesite korisnicko ime"
+
         android:inputType="textEmailAddress"
         android:textSize="20sp" />
 

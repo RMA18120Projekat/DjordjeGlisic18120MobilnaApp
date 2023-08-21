@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RangListaFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+            android:src="@drawable/elfaklogo" />
+
+
+        <TextView
+            android:id="@+id/textView10"
+            style="@style/Naslov"
+            android:layout_width="match_parent"
+            android:layout_height="79dp"
+            android:layout_gravity="center_horizontal"
+            android:text="My Places"
+            android:textAlignment="center"
+
+            android:textSize="48sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Rang lista korisnika na osnovu broja poena zaradjenih dodavanjem,komentarisanjem i azuriranjem mesta na mapi"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tabelaRang">
+
+                </TableLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+</ScrollView>
