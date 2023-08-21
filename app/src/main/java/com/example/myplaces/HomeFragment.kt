@@ -1,6 +1,7 @@
 package com.example.myplaces
 
 import android.content.ContentValues.TAG
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,16 +15,25 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import org.osmdroid.config.Configuration
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 
 class HomeFragment : Fragment() {
@@ -38,17 +48,18 @@ class HomeFragment : Fragment() {
     private lateinit var storageReference: StorageReference
     lateinit var mojaMesta:Button
     lateinit var dodajMesto:Button
-    lateinit var mape:ImageView
     lateinit var profilna:ImageView
     lateinit var komentarisiMesto:Button
     lateinit var svojiKomentari:Button
     lateinit var pretrazi:Button
+    private lateinit var map:MapView
 
     private lateinit var prezimeBaza:TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view=inflater.inflate(R.layout.fragment_home,container,false)
         textIme=view.findViewById(R.id.textViewKorisnikHome)
         auth=FirebaseAuth.getInstance()
@@ -96,15 +107,7 @@ class HomeFragment : Fragment() {
         dodajMesto.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_dodajMestoFragment)
         }
-        mape=view.findViewById(R.id.imageViewMape)
-        mape.setOnClickListener{
 
-            locationViewModel.samoPregled=true
-            locationViewModel.dodajObjekat=false
-            locationViewModel.jedanObjekat=false
-            findNavController().navigate(R.id.action_homeFragment_to_mapFragment)
-
-        }
         komentarisiMesto=view.findViewById(R.id.buttonKomentarisiOcena)
         komentarisiMesto.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_komentarOcenaFragment)
@@ -148,6 +151,87 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu,menu)
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val ctx = activity?.applicationContext
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+        map = requireView().findViewById(R.id.mapGPS)
+        map.setMultiTouchControls(true)
+        var startPoint: GeoPoint = GeoPoint(43.158495, 22.585555)
+        map.controller.setCenter(startPoint)
+
+
+        setupLocation()
+
+    }
+
+    private fun setupLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            val requestPermissionLauncher = registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    setMyLocationOverlay()
+
+                }
+            }
+
+            // Pokretanje zahtjeva za dozvolom
+            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            setUpMap()
+        }
+    }
+
+    private fun setMyLocationOverlay() {
+        val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+        myLocationOverlay.enableMyLocation()
+        map.overlays.add(myLocationOverlay)
+        map.controller.setCenter(myLocationOverlay.myLocation)
+    }
+    private fun obeleziSveObjekteNaMapi()
+    {
+
+        for(mojeMesto in sharedViewModel.getMyPlaces())
+        {
+            val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
+            locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
+            val marker = Marker(map)
+            marker.position = sPoint
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
+            marker.title = mojeMesto.naziv
+            marker.subDescription = "Mesto je dodao:"+mojeMesto.autor+"<br>"+"Teren je:"+mojeMesto.teren+"<br>"+"Ocena:"+mojeMesto.ocena+"<br>"+"Dimenzije:"+mojeMesto.dimenzije+"<br>"+"Rasveta:"+mojeMesto.rasveta+"<br>"+"Prosecan broj ljudi:"+mojeMesto.prosecanBrojLjudi.toString()+"<br>"+"Posecenost:"+mojeMesto.posecenost+"<br>"
+            if(mojeMesto.teren=="Kosarkaski")
+            {
+                marker.subDescription+="Sirinca obruca:"+mojeMesto.sirinaObruca+"<br>"+"Osobina obruca:"+mojeMesto.osobinaObruca+"<br>"+"Podloga:"+mojeMesto.podlogaKosarka+"<br>"+"Mrezica:"+mojeMesto.mrezica+"<br>"+"Visina kosa:"+mojeMesto.visinaKosa
+            }
+            else if(mojeMesto.teren=="Fudbalski")
+            {
+                marker.subDescription+="Mreza"+mojeMesto.mreza+"<br>"+"Golovi:"+mojeMesto.golovi+"<br>"+"Podloga:"+mojeMesto.podlogaFudbal
+            }
+
+            // Dodavanje markera na mapu
+            map.overlays.add(marker)
+            map.invalidate()
+
+
+
+        }
+
+    }
+    private fun setUpMap()
+    {
+
+        map.controller.setZoom(15.0)
+
+
+            setMyLocationOverlay()
+            obeleziSveObjekteNaMapi()
+
+
     }
 
 

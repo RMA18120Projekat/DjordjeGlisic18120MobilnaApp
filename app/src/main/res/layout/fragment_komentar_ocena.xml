@@ -366,7 +366,7 @@
             android:layout_height="63dp"
             android:ems="10"
             android:hint="Unesite ocenu od 1-10"
-            android:inputType="text"
+            android:inputType="number"
             android:textAlignment="center"
             android:textSize="25sp" />
 

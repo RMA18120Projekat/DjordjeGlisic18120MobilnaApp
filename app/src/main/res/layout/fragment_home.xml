@@ -11,8 +11,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_gravity="center"
->
+
+        >
     <ImageView
         android:id="@+id/imageViewR3"
         android:layout_width="match_parent"
@@ -127,19 +127,11 @@
         android:layout_height="48dp"
         android:text="Vidi svoja omiljena mesta" />
 
-    <ImageView
-        android:id="@+id/imageViewMape"
-        android:layout_width="match_parent"
-        android:layout_height="78dp"
-        android:src="@drawable/osm_ic_center_map" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Kliknite na slku da bi ste otvorili mapu"
-        android:textAlignment="center"
-        android:textSize="20sp" />
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapGPS"
+            tilesource="Mapnik"
+            android:layout_width="match_parent"
+            android:layout_height="371dp" />
 
     </LinearLayout>
 </ScrollView>
