@@ -33,8 +33,6 @@ import java.io.ByteArrayOutputStream
 
 class EditFragment : Fragment() {
     lateinit var pass: EditText
-    lateinit var passC:EditText
-    lateinit var passN:EditText
     lateinit var korisnickoIme: EditText
     lateinit var ime: EditText
     lateinit var prezime: EditText
@@ -63,8 +61,6 @@ class EditFragment : Fragment() {
         val view=inflater.inflate(R.layout.fragment_edit, container, false)
         //INICIJALIZACIJA
         pass=view.findViewById(R.id.editTextStaraSifraU)
-        passN=view.findViewById(R.id.editTextNovaSifraU)
-        passC=view.findViewById(R.id.editTextNovaSifraU2)
         korisnickoIme=view.findViewById(R.id.editTextMejlU)
         korisnickoIme.setText(sharedViewModel.user.korisnicko)
         ime=view.findViewById(R.id.editTextImeU)
@@ -78,7 +74,6 @@ class EditFragment : Fragment() {
         auth=FirebaseAuth.getInstance()
         openCameraButton = view.findViewById(R.id.buttonPhotoU)
         imageView = view.findViewById(R.id.imageView6U)
-        checkBox=view.findViewById(R.id.checkNovaSifra)
         back=view.findViewById(R.id.buttonBackU)
         back.setOnClickListener{
             findNavController().navigate(R.id.action_editFragment_to_homeFragment)

@@ -93,34 +93,6 @@
           android:inputType="textPassword"
           android:textSize="25sp" />
 
-      <CheckBox
-          android:id="@+id/checkNovaSifra"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="Da li zelite da promenite sifru"
-          android:textSize="25sp"
-          android:visibility="gone"/>
-      <EditText
-          android:id="@+id/editTextNovaSifraU"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-            android:visibility="gone"
-          android:ems="10"
-          android:gravity="center"
-          android:hint="Ovde unesite novu sifru"
-          android:inputType="textPassword"
-          android:textSize="25sp" />
-
-        <EditText
-            android:id="@+id/editTextNovaSifraU2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Ovde potvrdite novu sifru"
-            android:inputType="textPassword"
-            android:textSize="25sp" />
 
 
         <ImageView
