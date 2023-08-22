@@ -198,7 +198,7 @@ class HomeFragment : Fragment() {
         for(mojeMesto in sharedViewModel.getMyPlaces())
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
-            locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
+            sharedViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
             val marker = Marker(map)
             marker.position = sPoint
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera

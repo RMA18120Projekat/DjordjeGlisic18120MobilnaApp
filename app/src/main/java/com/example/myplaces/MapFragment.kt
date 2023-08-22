@@ -97,14 +97,14 @@ class MapFragment : Fragment() {
                var startPoint =GeoPoint(myLocationOverlay.myLocation.latitude ,myLocationOverlay.myLocation.longitude)
                var endPoint = GeoPoint( clickedPoint.latitude , clickedPoint.longitude)
 
-               if ( startPoint.distanceToAsDouble(endPoint)<= 1000) {
+               if ( startPoint.distanceToAsDouble(endPoint)<= 60) {
                    if (locationViewModel.dodajObjekat == true||locationViewModel.jedanObjekat==true) {
-                       for (koordinata in locationViewModel.getKoordinate()) {
-                           var userPoint = GeoPoint(koordinata.latituda, koordinata.longituda)
-                           if (endPoint.distanceToAsDouble(userPoint) < 30) {
+                       for (mesto in sharedViewModel.getMyPlaces()) {
+                           var userPoint = GeoPoint(mesto.latituda!!.toDouble(), mesto.longituda!!.toDouble())
+                           if (endPoint.distanceToAsDouble(userPoint) < 60) {
                                Toast.makeText(
                                    context,
-                                   "Ne mozete da izabere datu lokaciju jer je izabrana od strane drugog korisnika",
+                                   "Na datoj lokaciji je vec postavljeno mesto",
                                    Toast.LENGTH_SHORT
                                ).show()
                                return false
@@ -125,7 +125,7 @@ class MapFragment : Fragment() {
                    }
                }
                else {
-                   Toast.makeText(context,"Ne mozete da izabere datu lokaciju jer je dalja od 1km (nije Vam u blizini)",Toast.LENGTH_SHORT).show()
+                   Toast.makeText(context,"Ne mozete da izaberete mesto jer se ne nalazite tamo",Toast.LENGTH_SHORT).show()
                    return false
 
                }
@@ -146,7 +146,7 @@ class MapFragment : Fragment() {
         for(mojeMesto in sharedViewModel.getMyPlaces())
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
-            locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
+            sharedViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
             val marker = Marker(map)
             marker.position = sPoint
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera
@@ -178,7 +178,7 @@ class MapFragment : Fragment() {
             //AKO SE IZ NIZA SVIH MESTA NADJE NEKI KOGA NIJE DODAO TRENUTNI KORISNIK
             if(mojeMesto.autor!=sharedViewModel.ime) {
                 //DODAJ TO MESTO U NIZ KOORDINATA
-                locationViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(), mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
+                sharedViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(), mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
                 //OBELEZI GA
                 val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
                 val marker = Marker(map)
@@ -219,23 +219,28 @@ class MapFragment : Fragment() {
                 var endPoint = GeoPoint(clickedPoint.latitude, clickedPoint.longitude)
                 if(startPoint.distanceToAsDouble(endPoint)<1000)
                 {
+                    var postoji=false
                     var i:Int=0
-                    for(koordinate in locationViewModel.getKoordinate())
+                    for(mesto in sharedViewModel.getMyPlaces())
                     {
-                        var objPoint=GeoPoint(koordinate.latituda,koordinate.longituda)
+                        var objPoint=GeoPoint(mesto.latituda!!.toDouble(),mesto.longituda!!.toDouble())
                         if(endPoint.distanceToAsDouble(objPoint)<=60)
                         {
+                            postoji=true
                             val lon = clickedPoint.longitude.toString()
                             val lati = clickedPoint.latitude.toString()
-                            locationViewModel.setLocationAndName(lon, lati,koordinate.naziv.toString(),true)
+                            locationViewModel.setLocationAndName(lon, lati,mesto.naziv.toString(),true)
                             findNavController().popBackStack()
                             return true
                         }
-                        else
-                        {
-                            Toast.makeText(context,"Nema objekta na toj lokacii",Toast.LENGTH_SHORT).show()
-                            return false
-                        }
+
+
+                    }
+                    if(postoji==false)
+                    {
+                        Toast.makeText(context,"Nema objekta na toj lokacii",Toast.LENGTH_SHORT).show()
+                        return false
+
                     }
                     return false
 

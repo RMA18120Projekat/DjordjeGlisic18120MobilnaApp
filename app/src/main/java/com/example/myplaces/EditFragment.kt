@@ -52,6 +52,7 @@ class EditFragment : Fragment() {
 
     private lateinit var openCameraButton: Button
     private lateinit var imageView: ImageView
+    private lateinit var zaSliku:ProgressBar
 
 
     override fun onCreateView(
@@ -74,6 +75,7 @@ class EditFragment : Fragment() {
         auth=FirebaseAuth.getInstance()
         openCameraButton = view.findViewById(R.id.buttonPhotoU)
         imageView = view.findViewById(R.id.imageView6U)
+        zaSliku=view.findViewById(R.id.zaSliku)
         back=view.findViewById(R.id.buttonBackU)
         back.setOnClickListener{
             findNavController().navigate(R.id.action_editFragment_to_homeFragment)
@@ -113,7 +115,9 @@ class EditFragment : Fragment() {
             var name = ime.text.toString()
             var surname = prezime.text.toString()
             var numberPhone = brojTelefona.text.toString()
-            user=User(korisnicko,sifra,name,surname,numberPhone.toLongOrNull(),imgUrl,ArrayList(),sharedViewModel.user.bodovi)
+            user=User(korisnicko,sifra,name,surname,numberPhone.toLongOrNull(),imgUrl,
+                ArrayList(),sharedViewModel.user.bodovi
+            )
             //AZURIRANJE SPOREDNIH(NE KLJUCNIH ATRIBUTA)
             if(korisnicko==sharedViewModel.user.korisnicko&&pass.text.toString()==sharedViewModel.user.sifra)
             {
@@ -198,6 +202,8 @@ class EditFragment : Fragment() {
             val imageData = baos.toByteArray()
 
             // Upload the image to Firebase Storage
+            zaSliku.visibility=View.VISIBLE
+            imageView.visibility=View.GONE
             val uploadTask = imagesRef.putBytes(imageData)
             uploadTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -207,6 +213,8 @@ class EditFragment : Fragment() {
                         // Save the URI to the database or use it as needed
                         imgUrl = uri.toString()
                         sharedViewModel.img=imgUrl
+                        zaSliku.visibility=View.GONE
+                        imageView.visibility=View.VISIBLE
                         // Add the code to save the URL to the user's data in Firebase Database here
                     }.addOnFailureListener { exception ->
                         // Handle any errors that may occur while retrieving the download URL

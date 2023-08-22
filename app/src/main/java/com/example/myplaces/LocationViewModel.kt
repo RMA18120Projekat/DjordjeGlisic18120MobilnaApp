@@ -29,7 +29,6 @@ class LocationViewModel: ViewModel() {
     {
         _longitude.value=lon
         _latitude.value=lat
-    //    setLocation=false
 
     }
     fun setLocationAndName(lon:String,lat:String,NazivMesta:String,base:Boolean)
@@ -40,17 +39,5 @@ class LocationViewModel: ViewModel() {
         _baza.value=base
 
     }
-   private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
-        fun getKoordinate():ArrayList<Koordinate>
-        {
-                return koordinate
-        }
-    fun setKoordinate(koor:ArrayList<Koordinate>)
-    {
-        koordinate=koor
-    }
-    fun addOne(koor:Koordinate)
-    {
-        koordinate.add(koor)
-    }
+
 }

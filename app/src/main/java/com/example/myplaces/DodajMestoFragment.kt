@@ -107,6 +107,7 @@ class DodajMestoFragment : Fragment() {
     ): View? {
         val view=inflater.inflate(R.layout.fragment_dodaj_mesto,container,false)
         slika=view.findViewById(R.id.slikaObjekta)
+        slika.visibility=View.VISIBLE
         nazivMesta=view.findViewById(R.id.editTextNazivMesta)
         opisMesta=view.findViewById(R.id.editTextKomentar)
         ocenaMesta=view.findViewById(R.id.editTextOcena)
@@ -464,8 +465,9 @@ class DodajMestoFragment : Fragment() {
                                 nazivMesta.text.clear()
                                 opisMesta.text.clear()
                                 ocenaMesta.text.clear()
-                                longituda.text.clear()
-                                latituda.text.clear()
+                                longituda.setText("")
+                                latituda.setText("")
+                                slika.visibility=View.GONE
                                 DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
                                     .replace("$", "").replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
                                     if(snapshot.exists())
@@ -474,6 +476,7 @@ class DodajMestoFragment : Fragment() {
                                         sharedViewModel.user.bodovi=sharedViewModel.user.bodovi?.plus(10)
                                         DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
                                             .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
+
                                                 Toast.makeText(context,"Dobili ste jos 10 bodova",Toast.LENGTH_SHORT).show()
                                         }.addOnFailureListener {
                                             Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()

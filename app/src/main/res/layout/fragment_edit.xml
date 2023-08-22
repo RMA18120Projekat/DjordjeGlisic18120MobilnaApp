@@ -85,7 +85,7 @@
       <EditText
           android:id="@+id/editTextStaraSifraU"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="54dp"
 
           android:ems="10"
           android:gravity="center"
@@ -99,6 +99,11 @@
             android:id="@+id/imageView6U"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+      <ProgressBar
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/zaSliku"
+          android:visibility="gone"/>
 
         <Button
             android:id="@+id/buttonPhotoU"

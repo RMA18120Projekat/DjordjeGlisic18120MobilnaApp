@@ -89,8 +89,20 @@ class KorisnikViewModel: ViewModel() {
     fun getNizFIltriranihMesta(): ArrayList<Places> {
         return nizFiltriranihMesta
     }
-
-
+////////////KOORDINATE SVIH MESTA
+private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
+    fun getKoordinate():ArrayList<Koordinate>
+    {
+        return koordinate
+    }
+    fun setKoordinate(koor:ArrayList<Koordinate>)
+    {
+        koordinate=koor
+    }
+    fun addOne(koor:Koordinate)
+    {
+        koordinate.add(koor)
+    }
 
     init
     {
@@ -188,6 +200,7 @@ class KorisnikViewModel: ViewModel() {
 
         })
     }
+
 
 
 

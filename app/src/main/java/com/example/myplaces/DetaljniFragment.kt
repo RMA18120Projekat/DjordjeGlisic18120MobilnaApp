@@ -588,6 +588,8 @@ class DetaljniFragment : Fragment() {
                 set.visibility=View.GONE
                 openCameraButton.visibility=View.GONE
                 openGalleryButton.visibility=View.GONE
+                sharedViewModel.latituda=""
+                sharedViewModel.longituda=""
                 for(komentar in sharedViewModel.getNizMesnihKomentara())
                 {
                     if(komentar.mesto==naziv.text.toString())
@@ -598,6 +600,7 @@ class DetaljniFragment : Fragment() {
                             .addOnFailureListener { exception->Toast.makeText(context,exception.toString(),Toast.LENGTH_LONG).show() }
                     }
                 }
+
 
 
                 DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "").replace("$", "")
