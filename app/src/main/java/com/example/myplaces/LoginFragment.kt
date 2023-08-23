@@ -19,7 +19,7 @@ class LoginFragment : Fragment() {
     lateinit var email: EditText
     lateinit var pass:EditText
      lateinit var auth:FirebaseAuth
-lateinit var progrss:ProgressBar
+    lateinit var progrss:ProgressBar
     private  val sharedViewModel:KorisnikViewModel by activityViewModels()
 
 

@@ -82,6 +82,7 @@ class MapFragment : Fragment() {
         myLocationOverlay.enableMyLocation()
         map.overlays.add(myLocationOverlay)
         map.controller.setCenter(myLocationOverlay.myLocation)
+
     }
     private fun setOnMapClickOverlay()
     {
@@ -89,6 +90,7 @@ class MapFragment : Fragment() {
         myLocationOverlay.enableMyLocation()
         map.overlays.add(myLocationOverlay)
         map.controller.setCenter(myLocationOverlay.myLocation)
+        //OVAJ DEO KODA SLUZI ZA OMOGUCAVANJE KLIKA NA SVOJU LOKACIJU IZNAD JE DA OBELEZI TRENUTNU LOKACIJU
        var recive=object:MapEventsReceiver{
            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                val clickedPoint = p ?: return false
@@ -134,6 +136,7 @@ class MapFragment : Fragment() {
                return false
            }
        }
+
         var overlayEvents=MapEventsOverlay(recive)
         map.overlays.add(overlayEvents)
 
@@ -277,8 +280,21 @@ class MapFragment : Fragment() {
     }
     private fun setUpMap()
     {
-        var startPoint:GeoPoint= GeoPoint(43.158495, 22.585555)
-        map.controller.setZoom(15.0)
+        val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+        myLocationOverlay.enableMyLocation()
+        myLocationOverlay.enableFollowLocation()
+       map.overlays.add(myLocationOverlay)
+        map.controller.setCenter(myLocationOverlay.myLocation)
+        map.invalidate()
+        var start = GeoPoint(
+            locationViewModel.getSvojaLati(),
+            locationViewModel.getSvojaLongi()
+        )
+
+        var startPoint:GeoPoint= start
+
+        map.controller.setZoom(14.0)
+        map.invalidate()
 
                 //Kad izabere samo mapu
         if(locationViewModel.samoPregled==true)
@@ -322,6 +338,7 @@ class MapFragment : Fragment() {
             }
         }
         map.controller.animateTo(startPoint)
+
     }
 
 

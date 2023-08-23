@@ -175,6 +175,7 @@ class HomeFragment : Fragment() {
             ) { isGranted: Boolean ->
                 if (isGranted) {
                     setMyLocationOverlay()
+                    obeleziSveObjekteNaMapi()
 
                 }
             }
@@ -225,11 +226,25 @@ class HomeFragment : Fragment() {
     private fun setUpMap()
     {
 
-        map.controller.setZoom(15.0)
+        val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+        myLocationOverlay.enableMyLocation()
+        myLocationOverlay.enableFollowLocation()
+        map.overlays.add(myLocationOverlay)
+        map.controller.setCenter(myLocationOverlay.myLocation)
+        map.invalidate()
+        var start = GeoPoint(
+            locationViewModel.getSvojaLati(),
+            locationViewModel.getSvojaLongi()
+        )
 
+        var startPoint:GeoPoint= start
 
-            setMyLocationOverlay()
-            obeleziSveObjekteNaMapi()
+        map.controller.setZoom(14.0)
+        map.invalidate()
+
+        obeleziSveObjekteNaMapi()
+        map.controller.animateTo(startPoint)
+
 
 
     }

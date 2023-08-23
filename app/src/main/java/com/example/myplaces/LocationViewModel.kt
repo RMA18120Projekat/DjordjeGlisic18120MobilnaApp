@@ -8,6 +8,16 @@ class LocationViewModel: ViewModel() {
 
     private val _nazivMesta=MutableLiveData<String>("")
     private val _baza=MutableLiveData<Boolean>(false)
+    private var svojaLati:Double=0.0
+    private var svojaLongi:Double=0.0
+    fun setSvojeKoordinate(lati:Double,longi:Double)
+    {
+        svojaLati=lati
+        svojaLongi=longi
+
+    }
+    fun getSvojaLati():Double{return svojaLati}
+    fun getSvojaLongi():Double{return svojaLongi}
     val nazivMesta:LiveData<String>
     get()=_nazivMesta
     val baza:LiveData<Boolean>

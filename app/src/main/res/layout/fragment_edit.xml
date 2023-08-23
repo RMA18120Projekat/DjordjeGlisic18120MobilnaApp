@@ -43,14 +43,11 @@
           android:id="@+id/editTextMejlU"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-
           android:ems="10"
           android:enabled="false"
           android:gravity="center"
-          android:hint="Ovde unesite E-mail"
           android:inputType="text"
           android:textSize="25sp" />
-
         <EditText
             android:id="@+id/editTextImeU"
             android:layout_width="match_parent"
@@ -92,10 +89,36 @@
           android:hint="Ovde unesite treuntu sifru"
           android:inputType="textPassword"
           android:textSize="25sp" />
+      <CheckBox
+          android:id="@+id/checkBox"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Da li zelite da promenite sifru" />
+      <EditText
+          android:id="@+id/editTextSifra1"
+          android:layout_width="match_parent"
+          android:layout_height="54dp"
+
+          android:ems="10"
+          android:gravity="center"
+          android:hint="Ovde unesite novu sifru"
+          android:inputType="textPassword"
+          android:textSize="25sp" />
+      <EditText
+          android:id="@+id/editTextSifra2"
+          android:layout_width="match_parent"
+          android:layout_height="54dp"
+
+          android:ems="10"
+          android:gravity="center"
+          android:hint="Ovde unesite novu sifru"
+          android:inputType="textPassword"
+          android:textSize="25sp" />
 
 
 
-        <ImageView
+
+      <ImageView
             android:id="@+id/imageView6U"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

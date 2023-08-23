@@ -673,6 +673,7 @@ class PretraziObjekatFragment : Fragment() {
         val density = resources.displayMetrics.density
         return (this * density).toInt()
     }
+    //Uvek mapa od ovde krece
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val ctx = activity?.applicationContext
@@ -709,10 +710,19 @@ class PretraziObjekatFragment : Fragment() {
         myLocationOverlay.enableMyLocation()
         map.overlays.add(myLocationOverlay)
         map.controller.setCenter(myLocationOverlay.myLocation)
-        //uso sam u debug mod sa ce vidis kude puca
-        //nzm kvo se sa desi
+
     }
     private fun setUpMap() {
+        var start = GeoPoint(
+            locationViewModel.getSvojaLati(),
+            locationViewModel.getSvojaLongi()
+        )
+
+        var startPointMapa:GeoPoint= start
+
+        map.controller.setZoom(14.0)
+        map.invalidate()
+
         for (point in markerPointList) {
             map.overlays.remove(point)
         }
@@ -786,7 +796,7 @@ class PretraziObjekatFragment : Fragment() {
 
         }
 
-        map.controller.animateTo(startPoint)
+        map.controller.animateTo(startPointMapa)
     }
 
 private fun crtajTabelu()
