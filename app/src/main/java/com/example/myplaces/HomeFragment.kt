@@ -1,5 +1,6 @@
 package com.example.myplaces
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -24,8 +25,11 @@ import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import org.osmdroid.config.Configuration
@@ -42,10 +46,7 @@ class HomeFragment : Fragment() {
     lateinit var database:DatabaseReference
     val sharedViewModel:KorisnikViewModel by activityViewModels()
     val locationViewModel:LocationViewModel by activityViewModels()
-    val storage = FirebaseStorage.getInstance()
     lateinit var ucitaj:ProgressBar
-    val storageRef = storage.reference
-    private lateinit var storageReference: StorageReference
     lateinit var mojaMesta:Button
     lateinit var dodajMesto:Button
     lateinit var profilna:ImageView
@@ -92,6 +93,7 @@ class HomeFragment : Fragment() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error accessing Firebase: ${e.message}")
+
         }
 
 
@@ -199,7 +201,6 @@ class HomeFragment : Fragment() {
         for(mojeMesto in sharedViewModel.getMyPlaces())
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
-            sharedViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
             val marker = Marker(map)
             marker.position = sPoint
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Postavljanje tačke spajanja markera

@@ -760,8 +760,8 @@ class PretraziObjekatFragment : Fragment() {
             map.controller.setCenter(myLocationOverlay.myLocation)
             val x = map.overlays[0] as MyLocationNewOverlay
             var start = GeoPoint(
-                x.lastFix.latitude,
-                x.lastFix.longitude
+                locationViewModel.getSvojaLati(),
+                locationViewModel.getSvojaLongi()
             )
             for (mesto in sharedViewModel.getNizFIltriranihMesta()) {
                 var endPoint = GeoPoint(

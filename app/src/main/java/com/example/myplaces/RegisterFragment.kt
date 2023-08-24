@@ -29,7 +29,6 @@ import java.io.ByteArrayOutputStream
 
 class RegisterFragment : Fragment() {
 private val CAMERA_PERMISSION_REQUEST_CODE = 1001
-
 lateinit var pass:EditText
 lateinit var korisnickoIme:EditText
 lateinit var ime:EditText
