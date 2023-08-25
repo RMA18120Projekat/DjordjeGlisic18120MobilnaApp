@@ -101,6 +101,7 @@ class DodajMestoFragment : Fragment() {
     private lateinit var prosecanBrojLjudi:EditText
     private lateinit var rasvetaSpinner: Spinner
     private  var rasvetaIzabrana:String="Nema"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -535,6 +536,7 @@ class DodajMestoFragment : Fragment() {
                 )
             }
         }
+
 
 
         return view

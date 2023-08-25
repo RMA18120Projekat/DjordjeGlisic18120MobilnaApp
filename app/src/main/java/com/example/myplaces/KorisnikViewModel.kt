@@ -20,64 +20,23 @@ class KorisnikViewModel: ViewModel() {
     var latituda=""
     var user:User=User()
     var place:Places=Places()
+    //SVI KORISNICI IZ BAZE
     private var korisnici:ArrayList<User> = ArrayList()
     private val _users=MutableLiveData<ArrayList<User>>()
      val users:LiveData<ArrayList<User>>
         get()=_users
-    //MESTA sva,svoja,tudja
+    //SVA MESTA IZ BAZE
     private var mojaMesta:ArrayList<Places> = ArrayList()
     private val _myPlaces= MutableLiveData<ArrayList<Places>>()
     val myPlaces: LiveData<ArrayList<Places>>
         get()=_myPlaces
-    private var svoje:ArrayList<Places> = ArrayList()
-    private var tudje:ArrayList<Places> = ArrayList()
+    //SVI KOMENTARI IZ BAZE
+    private var komentari:ArrayList<Comments> = ArrayList()
+    private val _comments= MutableLiveData<ArrayList<Comments>>()
+    val comments: LiveData<ArrayList<Comments>>
+        get()=_comments
+    //NIZ FILITRIRANIH MESTA
     private var nizFiltriranihMesta : ArrayList<Places> = ArrayList()
-    //KOMENTARI SVI ZA MESTO(MADA SE TO KASNIJE PROVERAVA),SVI KLJUCEVI ZA SVI KOMENTARI I SVI ZA JEDNO MESTO(TO SE ODMAH PROVERAVA)
-    private var nizKomentara:ArrayList<Comments> = ArrayList()
-    private var nizKljuceva:ArrayList<String> = ArrayList()
-    private var nizMesnihKomentara:ArrayList <Comments> =ArrayList()
-
-
-    fun getNizMesnihKomentara():ArrayList<Comments>
-    {
-        return nizMesnihKomentara
-    }
-    fun setNizMesnihKomentara(niz:ArrayList<Comments>)
-    {
-        nizKomentara=niz
-    }
-    fun getNizKomentara():ArrayList<Comments>
-    {
-        return nizKomentara
-    }
-    fun setNizKomentara(niz:ArrayList<Comments>)
-    {
-        nizKomentara=niz
-    }
-    fun getNizKljuceva():ArrayList<String>
-    {
-        return nizKljuceva
-    }
-    fun setNizKljuceva(niz:ArrayList<String>)
-    {
-        nizKljuceva=niz
-    }
-
-
-
-    fun getSvoje(): ArrayList<Places> {
-        return svoje
-    }
-    fun setSvoje(newSvoje: ArrayList<Places>) {
-        svoje = newSvoje
-    }
-
-    fun setTudje(newTudje: ArrayList<Places>) {
-        tudje = newTudje
-    }
-    fun getTudje(): ArrayList<Places> {
-        return tudje
-    }
 
     fun setFiltriranaMesta(newFM: ArrayList<Places>) {
         nizFiltriranihMesta = newFM
@@ -145,38 +104,11 @@ private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
                 Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
             }
         })
-        //SVI KOMENTARI UZMI IZ BAZE
-        DataBase.databaseComments.addValueEventListener(object:ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                nizKomentara.clear()
-                for(commentSnapshot in snapshot.children)
-                {
 
-
-                    val comment=commentSnapshot.getValue(Comments::class.java)
-                    comment?.let {
-                        if(it.autor.toString()==ime.toString())
-                        {
-                            //IZDVOJI SAMO KOJE JE TRENUTNI KORISNIK NAPISAO
-                            nizKomentara.add(it)
-                            nizKljuceva.add(it.id)
-
-                        }
-                    }
-
-
-                }
-
-            }
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
-                }
-
-        })
         //SVE KOMENTARE IZ BAZE UZMI
         DataBase.databaseComments.addValueEventListener(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                nizMesnihKomentara.clear()
+                var nizKomentara=ArrayList<Comments>()
                 for(commentSnapshot in snapshot.children)
                 {
 
@@ -184,13 +116,16 @@ private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
                     val comment=commentSnapshot.getValue(Comments::class.java)
                     comment?.let {
                             //IF ZA MESTO SPECIFICNO CE BITI NAPISAN KASNIJE
-                            nizMesnihKomentara.add(it)
+                            nizKomentara.add(it)
 
 
                     }
 
 
                 }
+                komentari.clear()
+                komentari.addAll(nizKomentara)
+                _comments.postValue(komentari)
 
             }
             override fun onCancelled(error: DatabaseError) {

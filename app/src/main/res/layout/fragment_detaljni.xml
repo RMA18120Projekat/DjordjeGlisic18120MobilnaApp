@@ -374,7 +374,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="86dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
@@ -392,6 +392,13 @@
                 android:layout_weight="1"
                 android:text="Obrisi mesto" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/komentariSvogaMesta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:text="Vidi komentare o mestu" />
 
         <Button
             android:id="@+id/buttonNazadU"

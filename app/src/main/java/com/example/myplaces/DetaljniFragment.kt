@@ -58,6 +58,7 @@ class DetaljniFragment : Fragment() {
     private lateinit var longituda:EditText
     private lateinit var staraLatituda:TextView
     private lateinit var staraLongituda:TextView
+    private lateinit var svojiKomentari:Button
     //////////////////////////////////////
     ////////////////////////////////////////
 
@@ -145,6 +146,7 @@ class DetaljniFragment : Fragment() {
         var openGalleryButton:Button=view.findViewById(R.id.buttonDodajGalerijomU)
         staraLatituda=view.findViewById(R.id.latitudaStara)
         staraLongituda=view.findViewById(R.id.longitudaStara)
+        svojiKomentari=view.findViewById(R.id.komentariSvogaMesta)
 
 
 
@@ -287,6 +289,10 @@ class DetaljniFragment : Fragment() {
             }
         } catch (e: Exception) {
             Log.e(ContentValues.TAG, "Error accessing Firebase: ${e.message}")
+        }
+        svojiKomentari.setOnClickListener{
+            locationViewModel.setName(sharedViewModel.izabranoMesto)
+            findNavController().navigate(R.id.action_detaljniFragment2_to_komentariMestaFragment)
         }
         back=view.findViewById(R.id.buttonNazadU)
         back.setOnClickListener{
@@ -519,6 +525,13 @@ class DetaljniFragment : Fragment() {
 
             findNavController().navigate(R.id.action_detaljniFragment2_to_mapFragment)
         }
+        var nizKometara = ArrayList<Comments>()
+        val nizObserver=Observer<ArrayList<Comments>>{newValue->
+            nizKometara=newValue
+
+
+        }
+        sharedViewModel.comments.observe(viewLifecycleOwner,nizObserver)
         ///////////////////////////////////////////////////////////////////////////////
         azuriraj.setOnClickListener{
             var Opis=opis.text.toString()
@@ -593,8 +606,9 @@ class DetaljniFragment : Fragment() {
                 openGalleryButton.visibility=View.GONE
                 sharedViewModel.latituda=""
                 sharedViewModel.longituda=""
-                for(komentar in sharedViewModel.getNizMesnihKomentara())
+                for(komentar in nizKometara)
                 {
+                    Toast.makeText(context,"${komentar.mesto}",Toast.LENGTH_SHORT).show()
                     if(komentar.mesto==naziv.text.toString())
                     {
                         DataBase.databaseComments.child(komentar.id.toString()).removeValue().addOnSuccessListener {

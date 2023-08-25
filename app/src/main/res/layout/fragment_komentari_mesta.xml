@@ -35,7 +35,7 @@
             android:layout_height="234dp"
             android:layout_marginBottom="15dp"
             android:gravity="center"
-            android:text="Na ovoj stranici nalaze se svi komentari koji su korisnici pisali o izabranom mestu. Mozete lajkovati ili dislajkovati komentar"
+            android:text="Na ovoj stranici nalaze se svi komentari koji su korisnici pisali o izabranom mestu."
             android:textSize="30sp"
             android:textStyle="bold" />
 

@@ -49,5 +49,9 @@ class LocationViewModel: ViewModel() {
         _baza.value=base
 
     }
+    fun setName(name:String)
+    {
+        _nazivMesta.value=name
+    }
 
 }

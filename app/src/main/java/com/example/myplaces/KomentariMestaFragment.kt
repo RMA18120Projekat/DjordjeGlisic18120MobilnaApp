@@ -11,11 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.marginBottom
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -25,21 +27,38 @@ class KomentariMestaFragment : Fragment() {
     val sharedViewModel:KorisnikViewModel by activityViewModels()
     var nizKomentara:ArrayList<Comments> = ArrayList()
     private val locationViewModel:LocationViewModel by activityViewModels()
+    private lateinit var glavni:LinearLayout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_komentari_mesta, container, false)
-        val layout=LinearLayout(context)
-        val glavni=view.findViewById<LinearLayout>(R.id.glavni)
+         glavni=view.findViewById<LinearLayout>(R.id.glavni)
+        crtajFormuKomentara()
+        val nizObserver= Observer<ArrayList<Comments>>{ newValue->
+            nizKomentara=newValue
 
+            crtajFormuKomentara()
+        }
+        sharedViewModel.comments.observe(viewLifecycleOwner,nizObserver)
+
+
+
+        return view
+    }
+    private fun crtajFormuKomentara()
+    {
+        glavni.removeAllViews()
+
+        var kolko=0
+        val layout=LinearLayout(context)
         glavni.addView(layout)
-        for(clan in sharedViewModel.getNizKomentara())
+        for(clan in nizKomentara)
         {
             if(clan.mesto.toString()==locationViewModel.nazivMesta.value.toString())
             {
+                kolko++
                 Toast.makeText(context,"Uso sam u if",Toast.LENGTH_SHORT).show()
-                nizKomentara.add(clan)
                 layout.orientation=LinearLayout.VERTICAL
                 val layoutParamsLayout = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -47,7 +66,7 @@ class KomentariMestaFragment : Fragment() {
                 )
                 layout.layoutParams= layoutParamsLayout
                 layout.layoutParams = layoutParamsLayout
-              var autorText=TextView(context)
+                var autorText=TextView(context)
                 autorText.layoutParams=LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -124,10 +143,17 @@ class KomentariMestaFragment : Fragment() {
 
 
         }
+        if(kolko==0)
+        {
+            var poruka=TextView(context)
+            poruka.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+            poruka.textAlignment=TextView.TEXT_ALIGNMENT_CENTER
+            poruka.textSize=40f
+            poruka.gravity=LinearLayout.TEXT_ALIGNMENT_CENTER
+            poruka.text="Za mesto ${locationViewModel.nazivMesta.value.toString()} jos uvek nije napisan ni jedan komentar"
+            glavni.addView(poruka)
+        }
 
-
-
-        return view
     }
 
 

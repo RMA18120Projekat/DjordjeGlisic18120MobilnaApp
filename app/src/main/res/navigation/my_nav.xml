@@ -155,6 +155,9 @@
         <action
             android:id="@+id/action_detaljniFragment2_to_pretraziObjekatFragment"
             app:destination="@id/pretraziObjekatFragment" />
+        <action
+            android:id="@+id/action_detaljniFragment2_to_komentariMestaFragment"
+            app:destination="@id/komentariMestaFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -253,6 +256,11 @@
             android:id="@+id/action_komentariMestaFragment_to_komentarOcenaFragment"
             app:destination="@id/komentarOcenaFragment"
             app:popUpTo="@id/komentarOcenaFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_komentariMestaFragment_to_detaljniFragment2"
+            app:destination="@id/detaljniFragment2"
+            app:popUpTo="@id/detaljniFragment2"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
