@@ -20,7 +20,10 @@ class KorisnikViewModel: ViewModel() {
     var latituda=""
     var user:User=User()
     var place:Places=Places()
-    private var users:ArrayList<User> = ArrayList()
+    private var korisnici:ArrayList<User> = ArrayList()
+    private val _users=MutableLiveData<ArrayList<User>>()
+     val users:LiveData<ArrayList<User>>
+        get()=_users
     //MESTA sva,svoja,tudja
     private var mojaMesta:ArrayList<Places> = ArrayList()
     private val _myPlaces= MutableLiveData<ArrayList<Places>>()
@@ -34,14 +37,7 @@ class KorisnikViewModel: ViewModel() {
     private var nizKljuceva:ArrayList<String> = ArrayList()
     private var nizMesnihKomentara:ArrayList <Comments> =ArrayList()
 
-    fun getUsers():ArrayList<User>
-    {
-        return users
-    }
-    fun setUsers(u:ArrayList<User>)
-    {
-        users=u
-    }
+
     fun getNizMesnihKomentara():ArrayList<Comments>
     {
         return nizMesnihKomentara
@@ -68,7 +64,7 @@ class KorisnikViewModel: ViewModel() {
     }
 
 
-   
+
     fun getSvoje(): ArrayList<Places> {
         return svoje
     }
@@ -116,8 +112,9 @@ private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
                         updatedUsers.add(it)
                     }
                 }
-                users.clear()
-                users.addAll(updatedUsers)
+                korisnici.clear()
+                korisnici.addAll(updatedUsers)
+                _users.postValue(korisnici)
 
             }
 

@@ -16,6 +16,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 
 
@@ -23,6 +24,7 @@ class RangListaFragment : Fragment() {
 
     private lateinit var tableLayout:TableLayout
     private val sharedViewModel:KorisnikViewModel by activityViewModels()
+    private var nizKorisnika:ArrayList<User> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,6 +32,13 @@ class RangListaFragment : Fragment() {
         val view=inflater.inflate(R.layout.fragment_rang_lista, container, false)
         tableLayout=view.findViewById(R.id.tabelaRang)
         crtajTabelu()
+        val nizObserver= Observer<ArrayList<User>>{ newValue->
+            nizKorisnika=newValue
+
+            crtajTabelu()
+        }
+        sharedViewModel.users.observe(viewLifecycleOwner,nizObserver)
+
         return view
 
     }
@@ -64,20 +73,20 @@ class RangListaFragment : Fragment() {
         // Dodavanje TableRow u TableLayout
 
         tableLayout.addView(tableRow)
-        for(i in 0 until sharedViewModel.getUsers().size)
+        for(i in 0 until nizKorisnika.size)
         {
-            for(j in i+1 until sharedViewModel.getUsers().size)
+            for(j in i+1 until nizKorisnika.size)
             {
-                if(sharedViewModel.getUsers()[i].bodovi!!.toInt()<sharedViewModel.getUsers()[j].bodovi!!.toInt())
+                if(nizKorisnika[i].bodovi!!.toInt()<nizKorisnika[j].bodovi!!.toInt())
                 {
-                    var pom=sharedViewModel.getUsers()[i]
-                    sharedViewModel.getUsers()[i]=sharedViewModel.getUsers()[j]
-                    sharedViewModel.getUsers()[j]=pom
+                    var pom=nizKorisnika[i]
+                    nizKorisnika[i]=nizKorisnika[j]
+                    nizKorisnika[j]=pom
                 }
             }
 
         }
-        for (user in sharedViewModel.getUsers()) {
+        for (user in nizKorisnika) {
             val row = TableRow(context) // Kreiranje TableRow-a
             val rowParams = TableLayout.LayoutParams(
                 TableLayout.LayoutParams.MATCH_PARENT,
