@@ -21,11 +21,13 @@ import androidx.lifecycle.Observer
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import java.util.Calendar
 
 
 class KomentariMestaFragment : Fragment() {
     val sharedViewModel:KorisnikViewModel by activityViewModels()
     var nizKomentara:ArrayList<Comments> = ArrayList()
+    private var nizOsoba= ArrayList<KorisnikKomentarP>()
     private val locationViewModel:LocationViewModel by activityViewModels()
     private lateinit var glavni:LinearLayout
     override fun onCreateView(
@@ -41,6 +43,14 @@ class KomentariMestaFragment : Fragment() {
             crtajFormuKomentara()
         }
         sharedViewModel.comments.observe(viewLifecycleOwner,nizObserver)
+        val nizOsobaObserver=Observer<ArrayList<KorisnikKomentarP>>{newValue->
+            nizOsoba=newValue
+            crtajFormuKomentara()
+
+
+        }
+        sharedViewModel.osobePodrzale.observe(viewLifecycleOwner,nizOsobaObserver)
+
 
 
 
@@ -125,8 +135,133 @@ class KomentariMestaFragment : Fragment() {
                     LinearLayout.LayoutParams.WRAP_CONTENT
 
                 )
+                var horizontalni=LinearLayout(context)
+                horizontalni.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                horizontalni.orientation=LinearLayout.HORIZONTAL
+                var pozitivni=Button(context)
+                var negativni=Button(context)
+                var layoutPara1=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                var layoutPara2=LinearLayout.LayoutParams(98.dpToPx(),68.dpToPx())
+                pozitivni.layoutParams=layoutPara2
+                negativni.layoutParams=layoutPara2
+                pozitivni.text="+"
+                var pozitivniText=TextView(context)
+                pozitivniText.textSize=30f
+                pozitivniText.text=clan.pozitivni.toString()
+                layoutPara1.setMargins(0, 0, 128.dpToPx(), 0)
+                pozitivniText.layoutParams=layoutPara1
+                pozitivni.setPadding(16.dpToPx(),16.dpToPx(),16.dpToPx(),16.dpToPx())
+                negativni.setPadding(16.dpToPx(),16.dpToPx(),16.dpToPx(),16.dpToPx())
+                pozitivni.textSize=30f
+                negativni.text="-"
+                negativni.textSize=30f
+                var negativniText=TextView(context)
+                negativniText.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                negativniText.textSize=30f
+                negativniText.text=clan.negativni.toString()
+                pozitivni.setTextColor(resources.getColor(R.color.green))
+                negativni.setTextColor(resources.getColor(R.color.red))
+                pozitivniText.setTextColor(resources.getColor(R.color.green))
+                negativniText.setTextColor(resources.getColor(R.color.red))
+                horizontalni.addView(pozitivni)
+                horizontalni.addView(pozitivniText)
+                horizontalni.addView(negativniText)
+                horizontalni.addView(negativni)
                 odvajac.layoutParams=layoutParamsDugme
                 odvajac.text=""
+                pozitivni.hint=clan.id
+                for(provera in nizOsoba)
+                {
+                    if(provera.idKorisnika==sharedViewModel.ime&&provera.idKomentara==clan.id&&provera.podrzao==true)
+                    {
+                        pozitivni.setBackgroundColor(resources.getColor(R.color.lightGreen))
+                        pozitivni.isEnabled=false
+
+                    }
+                    else if(provera.idKorisnika==sharedViewModel.ime&&provera.idKomentara==clan.id&&provera.podrzao==false)
+                    {
+                        negativni.setBackgroundColor(resources.getColor(R.color.lightRed))
+                        negativni.isEnabled=false
+
+                    }
+                }
+                pozitivni.setOnClickListener{
+
+                    DataBase.databaseComments.child(pozitivni.hint.toString()).get().addOnSuccessListener {snapshot->
+                        if(snapshot.exists())
+                        {
+                            var komentarBaza=Comments(snapshot.child("id").value.toString(),snapshot.child("autor").value.toString(),snapshot.child("mesto").value.toString(),snapshot.child("ocena").value.toString().toInt(),snapshot.child("komentar").value.toString(),snapshot.child("datum").value.toString(),snapshot.child("vreme").value.toString(),snapshot.child("pozitivni").value.toString().toInt(),snapshot.child("negativni").value.toString().toInt())
+                            var podrzaoJe=false
+                            for(podrzao in nizOsoba)
+                            {
+                                //VEC JE TAJ KORISNIK ZA TAJ KOMENTAR STAVIO NEGATIVAN
+                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==pozitivni.hint&&podrzao.podrzao==false)
+                                {
+                                    //ODUZMI PRETHODNO DODAT NEGATIVNI I OBRISI GA IZ BAZE TAJ 1 TO 1 VEZU
+                                    komentarBaza.negativni=komentarBaza.negativni.minus(1)
+                                    DataBase.dataBaseOneToOne.child(podrzao.id).removeValue()
+
+                                }
+                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==pozitivni.hint&&podrzao.podrzao==true)
+                                {
+                                    //AKO JE PRETHODNO TAJ KOMENTAR PODRZAO INDIKATOR JE TRUE
+                                    podrzaoJe=true
+
+                                }
+                            }
+                            //AKO NIJE DO SADA PODRZAO TAJ KOMENTAR TAJ KORISNIK
+                            if(podrzaoJe==false) {
+                                komentarBaza.pozitivni = komentarBaza.pozitivni.plus(1)
+                                DataBase.databaseComments.child(komentarBaza.id)
+                                    .setValue(komentarBaza).addOnSuccessListener {
+                                        var id =System.currentTimeMillis().toString()
+                                        var pozitivan=KorisnikKomentarP(id,sharedViewModel.ime,pozitivni.hint.toString(),true)
+                                        DataBase.dataBaseOneToOne.child(id).setValue(pozitivan).addOnSuccessListener {  }
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+                negativni.hint=clan.id
+                negativni.setOnClickListener{
+
+                    DataBase.databaseComments.child(negativni.hint.toString()).get().addOnSuccessListener {snapshot->
+                        if(snapshot.exists())
+                        {
+                            var komentarBaza=Comments(snapshot.child("id").value.toString(),snapshot.child("autor").value.toString(),snapshot.child("mesto").value.toString(),snapshot.child("ocena").value.toString().toInt(),snapshot.child("komentar").value.toString(),snapshot.child("datum").value.toString(),snapshot.child("vreme").value.toString(),snapshot.child("pozitivni").value.toString().toInt(),snapshot.child("negativni").value.toString().toInt())
+                            var podrzaoJe=false
+                            for(podrzao in nizOsoba)
+                            {
+                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==negativni.hint&&podrzao.podrzao==true)
+                                {
+                                    komentarBaza.pozitivni=komentarBaza.pozitivni.minus(1)
+                                    DataBase.dataBaseOneToOne.child(podrzao.id).removeValue()
+
+                                }
+                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==negativni.hint&&podrzao.podrzao==false)
+                                {
+                                    podrzaoJe=true
+
+                                }
+                            }
+                            if(podrzaoJe==false) {
+                                komentarBaza.negativni = komentarBaza.negativni.plus(1)
+                                DataBase.databaseComments.child(komentarBaza.id)
+                                    .setValue(komentarBaza).addOnSuccessListener {
+                                        var id=System.currentTimeMillis().toString()
+                                        var negativan=KorisnikKomentarP(id,sharedViewModel.ime,negativni.hint.toString(),false)
+                                        DataBase.dataBaseOneToOne.child(id).setValue(negativan).addOnSuccessListener {  }
+
+
+                                    }
+                            }
+                        }
+
+                    }
+
+                }
                 layout.addView(autorText)
                 layout.addView(autor)
                 layout.addView(ocenaText)
@@ -134,6 +269,7 @@ class KomentariMestaFragment : Fragment() {
                 layout.addView(komentarText)
                 layout.addView(komentar)
                 layout.addView(datumVreme)
+                layout.addView(horizontalni)
                 layout.addView(odvajac)
                 layout.setBackgroundColor(Color.parseColor("#C5BCC6"))
 
@@ -154,6 +290,10 @@ class KomentariMestaFragment : Fragment() {
             glavni.addView(poruka)
         }
 
+    }
+    private fun Int.dpToPx(): Int {
+        val density = resources.displayMetrics.density
+        return (this * density).toInt()
     }
 
 

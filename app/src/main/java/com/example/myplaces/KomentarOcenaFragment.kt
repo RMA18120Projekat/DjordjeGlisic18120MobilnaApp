@@ -295,7 +295,7 @@ private lateinit var buttonInfo:Button
                 var instanca= Calendar.getInstance()
                 var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
                 var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
-                var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString(),datum,vreme)
+                var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString(),datum,vreme,0,0)
                 DataBase.databaseComments.child(id).setValue(koment).addOnCompleteListener{
                     Toast.makeText(context,"Uspesno ste dodali komentar",Toast.LENGTH_SHORT).show()
                     progress.visibility=View.GONE

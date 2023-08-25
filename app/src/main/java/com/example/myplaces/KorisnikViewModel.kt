@@ -35,6 +35,11 @@ class KorisnikViewModel: ViewModel() {
     private val _comments= MutableLiveData<ArrayList<Comments>>()
     val comments: LiveData<ArrayList<Comments>>
         get()=_comments
+    //VEZA 1 TO 1 KOMENTAR KORISNIK
+    private var podrzao:ArrayList<KorisnikKomentarP> = ArrayList()
+    private val _osobePodrzale=MutableLiveData<ArrayList<KorisnikKomentarP>>()
+    val osobePodrzale:LiveData<ArrayList<KorisnikKomentarP>>
+    get()=_osobePodrzale
     //NIZ FILITRIRANIH MESTA
     private var nizFiltriranihMesta : ArrayList<Places> = ArrayList()
 
@@ -132,6 +137,27 @@ private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
                 Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
             }
 
+        })
+        //SVI KOJI SU PODRZALI KOMENTARE IZ BAZE
+        DataBase.dataBaseOneToOne.addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val updatedO= ArrayList<KorisnikKomentarP>()
+                for(korisnik in snapshot.children)
+                {
+                    val el=korisnik.getValue(KorisnikKomentarP::class.java)
+                    el?.let {
+                        updatedO.add(it)
+                    }
+                }
+                podrzao.clear()
+                podrzao.addAll(updatedO)
+                _osobePodrzale.postValue(podrzao)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG,"Greska prilikom preuzimanja korisnika sa baze ${error.message}")
+            }
         })
     }
 

@@ -43,12 +43,6 @@ private var nizKomentara = ArrayList<Comments>()
 
 
 
-
-
-
-
-
-
         return view
 
     }
@@ -140,6 +134,32 @@ private var nizKomentara = ArrayList<Comments>()
                 )
                 datumVreme.text = clan.datum + " u " + clan.vreme
                 datumVreme.textSize = 20f
+                var horizontalni=LinearLayout(context)
+                horizontalni.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                horizontalni.orientation=LinearLayout.HORIZONTAL
+                var layoutPara1=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                var pozitivni=TextView(context)
+                pozitivni.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                pozitivni.textSize=25f
+                pozitivni.text="Pozitivni="
+                pozitivni.setTypeface(null, Typeface.BOLD)
+                var negativni=TextView(context)
+                negativni.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                negativni.textSize=25f
+                negativni.text="Negativni="
+                negativni.setTypeface(null, Typeface.BOLD)
+                var pozitivniText=TextView(context)
+                pozitivniText.textSize=25f
+                pozitivniText.text=clan.pozitivni.toString()
+                layoutPara1.setMargins(0, 0, 90.dpToPx(), 0)
+                pozitivniText.layoutParams=layoutPara1
+                var negativniText=TextView(context)
+                negativniText.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                negativniText.textSize=25f
+                negativniText.text=clan.negativni.toString()
+                pozitivni.setTextColor(resources.getColor(R.color.green))
+                negativni.setTextColor(resources.getColor(R.color.red))
+
                 var obrisi = Button(context)
                 var layoutParamsButton = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -151,7 +171,7 @@ private var nizKomentara = ArrayList<Comments>()
                 obrisi.setOnClickListener {
                     DataBase.databaseComments.child(obrisi.hint.toString()).removeValue()
                         .addOnSuccessListener {
-                            findNavController().navigate(R.id.action_svojiKomentariFragment_to_homeFragment)
+                           // findNavController().navigate(R.id.action_svojiKomentariFragment_to_homeFragment)
                         }.addOnFailureListener { exception ->
                         Toast.makeText(
                             context,
@@ -170,6 +190,11 @@ private var nizKomentara = ArrayList<Comments>()
                 layout.addView(komentarText)
                 layout.addView(komentar)
                 layout.addView(datumVreme)
+                horizontalni.addView(pozitivni)
+                horizontalni.addView(pozitivniText)
+                horizontalni.addView(negativni)
+                horizontalni.addView(negativniText)
+                layout.addView(horizontalni)
                 layout.addView(obrisi)
                 layout.setBackgroundColor(Color.parseColor("#C5BCC6"))
             }
@@ -193,6 +218,12 @@ private var nizKomentara = ArrayList<Comments>()
 
 
     }
+    private fun Int.dpToPx(): Int {
+        val density = resources.displayMetrics.density
+        return (this * density).toInt()
+    }
+
+
 
 
 
