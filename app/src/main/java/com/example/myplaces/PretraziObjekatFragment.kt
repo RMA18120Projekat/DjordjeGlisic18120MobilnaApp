@@ -98,6 +98,7 @@ class PretraziObjekatFragment : Fragment() {
     private lateinit var prosecanBrojLjudi:EditText
     private lateinit var rasvetaSpinner: Spinner
     private  var rasvetaIzabrana:String="Nista"
+    private var nizMesta:ArrayList<Places> = ArrayList()
 
 
     override fun onCreateView(
@@ -354,6 +355,13 @@ class PretraziObjekatFragment : Fragment() {
                 koseviIzabrana = adapterView?.getItemAtPosition(positon).toString()
             }
         }
+        val nizObserver=Observer<ArrayList<Places>>{newValue->
+            nizMesta=newValue
+
+
+        }
+        sharedViewModel.myPlaces.observe(viewLifecycleOwner,nizObserver)
+
         pretrazi.setOnClickListener {
 
             tableLayout.visibility = View.VISIBLE
@@ -391,7 +399,7 @@ class PretraziObjekatFragment : Fragment() {
             // Dodavanje TableRow u TableLayout
 
             tableLayout.addView(tableRow)
-            nizFiltriranihMestaPom=sharedViewModel.getMyPlaces()
+            nizFiltriranihMestaPom=nizMesta
             if(autor.text.toString().isNotEmpty())
             {
                 var pom=ArrayList<Places>()

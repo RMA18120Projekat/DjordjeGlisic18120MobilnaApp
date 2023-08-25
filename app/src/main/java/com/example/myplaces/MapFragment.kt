@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.firebase.database.DataSnapshot
@@ -34,6 +35,7 @@ class MapFragment : Fragment() {
 
     private val locationViewModel:LocationViewModel by activityViewModels()
     private val sharedViewModel:KorisnikViewModel by activityViewModels()
+    private var nizMesta : ArrayList<Places> = ArrayList()
 
 
     override fun onCreateView(
@@ -41,6 +43,52 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
+        val nizObserver= Observer<ArrayList<Places>>{ newValue->
+            nizMesta=newValue
+            //Kad izabere samo mapu
+            if(locationViewModel.samoPregled==true)
+            {
+                setMyLocationOverlay()
+                obeleziSveObjekteNaMapi()
+
+            }
+            else {
+                //Za dodavanje objekata
+                if (locationViewModel.dodajObjekat==true)
+                {
+
+                    setMyLocationOverlay()
+                    obeleziSveObjekteNaMapi()
+
+                    setOnMapClickOverlay()
+
+
+                }
+                //Kad izabere Neki objekat iz liste objekata
+                else if(locationViewModel.jedanObjekat==true)
+                {
+                    obeleziObjekatNaMapi()
+                    setOnMapClickOverlay()
+
+                    setMyLocationOverlay()
+
+
+                }
+                else if(locationViewModel.komentarisiObjekat==true)
+                {
+                    //KAD IZABERE DA KOMENTARISE OBJEKAT
+                    obeleziTudjeObjekte()
+                    dozvoliKlikNaTudjiObjekat()
+                    setMyLocationOverlay()
+                }
+                else
+                {
+                    setMyLocationOverlay()
+                }
+            }
+        }
+        sharedViewModel.myPlaces.observe(viewLifecycleOwner,nizObserver)
+
         return view
     }
 
@@ -100,8 +148,8 @@ class MapFragment : Fragment() {
                var endPoint = GeoPoint( clickedPoint.latitude , clickedPoint.longitude)
 
                if ( startPoint.distanceToAsDouble(endPoint)<= 60) {
-                   if (locationViewModel.dodajObjekat == true||locationViewModel.jedanObjekat==true) {
-                       for (mesto in sharedViewModel.getMyPlaces()) {
+                   if (locationViewModel.dodajObjekat == true) {
+                       for (mesto in nizMesta) {
                            var userPoint = GeoPoint(mesto.latituda!!.toDouble(), mesto.longituda!!.toDouble())
                            if (endPoint.distanceToAsDouble(userPoint) < 60) {
                                Toast.makeText(
@@ -112,6 +160,30 @@ class MapFragment : Fragment() {
                                return false
 
 
+                           }
+                       }
+                       val lon = clickedPoint.longitude.toString()
+                       val lati = clickedPoint.latitude.toString()
+                       locationViewModel.setLocation(lon, lati)
+                       findNavController().popBackStack()
+                       return true
+
+                   }
+                   else if(locationViewModel.jedanObjekat==true)
+                   {
+                       for (mesto in nizMesta) {
+                           var userPoint = GeoPoint(mesto.latituda!!.toDouble(), mesto.longituda!!.toDouble())
+                           if(mesto.naziv!=sharedViewModel.izabranoMesto) {
+                               if (endPoint.distanceToAsDouble(userPoint) < 60) {
+                                   Toast.makeText(
+                                       context,
+                                       "Na datoj lokaciji je vec postavljeno mesto",
+                                       Toast.LENGTH_SHORT
+                                   ).show()
+                                   return false
+
+
+                               }
                            }
                        }
                        val lon = clickedPoint.longitude.toString()
@@ -146,7 +218,7 @@ class MapFragment : Fragment() {
     private fun obeleziSveObjekteNaMapi()
     {
 
-        for(mojeMesto in sharedViewModel.getMyPlaces())
+        for(mojeMesto in nizMesta)
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
             sharedViewModel.addOne(Koordinate(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble(),mojeMesto.naziv.toString()))
@@ -176,7 +248,7 @@ class MapFragment : Fragment() {
     private fun obeleziTudjeObjekte()
     {
 
-        for(mojeMesto in sharedViewModel.getMyPlaces())
+        for(mojeMesto in nizMesta)
         {
             //AKO SE IZ NIZA SVIH MESTA NADJE NEKI KOGA NIJE DODAO TRENUTNI KORISNIK
             if(mojeMesto.autor!=sharedViewModel.ime) {
@@ -224,7 +296,7 @@ class MapFragment : Fragment() {
                 {
                     var postoji=false
                     var i:Int=0
-                    for(mesto in sharedViewModel.getMyPlaces())
+                    for(mesto in nizMesta)
                     {
                         var objPoint=GeoPoint(mesto.latituda!!.toDouble(),mesto.longituda!!.toDouble())
                         if(endPoint.distanceToAsDouble(objPoint)<=60)

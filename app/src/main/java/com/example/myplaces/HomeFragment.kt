@@ -16,9 +16,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
     lateinit var svojiKomentari:Button
     lateinit var pretrazi:Button
     private lateinit var map:MapView
-
+    private var nizMesta:ArrayList<Places> = ArrayList()
     private lateinit var prezimeBaza:TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -126,6 +128,13 @@ class HomeFragment : Fragment() {
         vidiListuKorisnika.setOnClickListener{
             findNavController().navigate(R.id.action_homeFragment_to_rangListaFragment)
         }
+        val nizObserver=Observer<ArrayList<Places>>{newValue->
+            nizMesta=newValue
+
+            obeleziSveObjekteNaMapi()
+        }
+        sharedViewModel.myPlaces.observe(viewLifecycleOwner,nizObserver)
+
         return view
     }
 
@@ -198,7 +207,7 @@ class HomeFragment : Fragment() {
     private fun obeleziSveObjekteNaMapi()
     {
 
-        for(mojeMesto in sharedViewModel.getMyPlaces())
+        for(mojeMesto in nizMesta)
         {
             val sPoint= GeoPoint(mojeMesto.latituda!!.toDouble(),mojeMesto.longituda!!.toDouble())
             val marker = Marker(map)

@@ -2,6 +2,9 @@ package com.example.myplaces
 
 import android.content.ContentValues
 import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,7 +22,10 @@ class KorisnikViewModel: ViewModel() {
     var place:Places=Places()
     private var users:ArrayList<User> = ArrayList()
     //MESTA sva,svoja,tudja
-    private var myPlaces: ArrayList<Places> = ArrayList()
+    private var mojaMesta:ArrayList<Places> = ArrayList()
+    private val _myPlaces= MutableLiveData<ArrayList<Places>>()
+    val myPlaces: LiveData<ArrayList<Places>>
+        get()=_myPlaces
     private var svoje:ArrayList<Places> = ArrayList()
     private var tudje:ArrayList<Places> = ArrayList()
     private var nizFiltriranihMesta : ArrayList<Places> = ArrayList()
@@ -62,13 +68,7 @@ class KorisnikViewModel: ViewModel() {
     }
 
 
-    fun getMyPlaces(): ArrayList<Places> {
-        return myPlaces
-    }
-
-    fun setMyPlaces(newMyPlaces: ArrayList<Places>) {
-        myPlaces = newMyPlaces
-    }
+   
     fun getSvoje(): ArrayList<Places> {
         return svoje
     }
@@ -137,8 +137,10 @@ private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
                     }
                 }
 
-                myPlaces.clear() // Obrišite postojeće podatke iz liste
-                myPlaces.addAll(updatedPlaces) // Ažurirajte listu sa novim podacima
+                mojaMesta.clear() // Obrišite postojeće podatke iz liste
+                mojaMesta.addAll(updatedPlaces) // Ažurirajte listu sa novim podacima
+                _myPlaces.postValue(mojaMesta)
+
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -54,8 +54,10 @@ class DetaljniFragment : Fragment() {
     private lateinit var ucitaj:ProgressBar
     private lateinit var back:Button
     private lateinit var obrisi:Button
-    private lateinit var latituda:TextView
-    private lateinit var longituda:TextView
+    private lateinit var latituda:EditText
+    private lateinit var longituda:EditText
+    private lateinit var staraLatituda:TextView
+    private lateinit var staraLongituda:TextView
     //////////////////////////////////////
     ////////////////////////////////////////
 
@@ -141,6 +143,8 @@ class DetaljniFragment : Fragment() {
         rasvetaSpinner=view.findViewById(R.id.spinnerRasvetaU)
         var openCameraButton:Button=view.findViewById(R.id.buttonDodajKameromU)
         var openGalleryButton:Button=view.findViewById(R.id.buttonDodajGalerijomU)
+        staraLatituda=view.findViewById(R.id.latitudaStara)
+        staraLongituda=view.findViewById(R.id.longitudaStara)
 
 
 
@@ -153,11 +157,11 @@ class DetaljniFragment : Fragment() {
                     naziv.text = snapshot.child("naziv").value.toString()
                     opis.setText( snapshot.child("komentar").value.toString())
                     ocena.setText(snapshot.child("ocena").value.toString())
-                    latituda.text=snapshot.child("latituda").value.toString()
-                    longituda.text=snapshot.child("longituda").value.toString()
+                    staraLatituda.text=snapshot.child("latituda").value.toString()
+                    staraLongituda.text=snapshot.child("longituda").value.toString()
                     prosecanBrojLjudi.setText(snapshot.child("prosecanBrojLjudi").value.toString())
-                    sharedViewModel.latituda=latituda.text.toString()
-                    sharedViewModel.longituda=longituda.text.toString()
+                    sharedViewModel.latituda=staraLatituda.text.toString()
+                    sharedViewModel.longituda=staraLongituda.text.toString()
                     imgUrl = snapshot.child("img").value.toString()
                     preuzmiSLiku()
                     //////////////////////////////////////////////////
@@ -493,22 +497,22 @@ class DetaljniFragment : Fragment() {
 
 ////////////////////////////////////////////////////////////////
         val lonObserver= Observer<String>{newValue->
-            longituda.text=newValue.toString()
+            longituda.setText(newValue.toString())
             sharedViewModel.longituda=longituda.text.toString()
 
 
         }
         locationViewModel.longitude.observe(viewLifecycleOwner,lonObserver)
         val latiObserver= Observer<String>{newValue->
-            latituda.text=newValue.toString()
+            latituda.setText(newValue.toString())
             sharedViewModel.latituda=latituda.text.toString()
 
         }
         locationViewModel.latitude.observe(viewLifecycleOwner,latiObserver)
         var set:Button=view.findViewById(R.id.buttonSetU)
         set.setOnClickListener{
-            sharedViewModel.latituda=latituda.text.toString()
-            sharedViewModel.longituda=longituda.text.toString()
+            sharedViewModel.latituda=staraLatituda.text.toString()
+            sharedViewModel.longituda=staraLongituda.text.toString()
             locationViewModel.samoPregled=false
             locationViewModel.dodajObjekat=false
             locationViewModel.jedanObjekat=true
@@ -542,9 +546,7 @@ class DetaljniFragment : Fragment() {
                         "Uspesno ste azurirali mesto ${mesto.naziv}",
                         Toast.LENGTH_SHORT
                     ).show()
-                    naziv.text = ""
-                    opis.text.clear()
-                    ocena.text.clear()
+
                     DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "").replace("$", "")
                         .replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
                         if(snapshot.exists())
@@ -558,6 +560,7 @@ class DetaljniFragment : Fragment() {
                             DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
                                 .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
                                 Toast.makeText(context,"Dobili ste jos 2 boda",Toast.LENGTH_SHORT).show()
+                                findNavController().popBackStack()
                             }.addOnFailureListener {
                                 Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
                             }
