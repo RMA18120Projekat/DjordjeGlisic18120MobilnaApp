@@ -54,13 +54,16 @@ class LoginFragment : Fragment() {
                             Toast.makeText(context,it.exception.toString(),Toast.LENGTH_SHORT)
 
                         }
+                    }.addOnFailureListener {exception->
+                        progrss.visibility=View.GONE
+                        Toast.makeText(context,exception.toString(),Toast.LENGTH_SHORT).show()
                     }
 
 
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "Please enter both email and password.",
+                        "Molim Vas unesite i email i sifru.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

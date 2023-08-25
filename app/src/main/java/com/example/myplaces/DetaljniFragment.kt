@@ -545,11 +545,32 @@ class DetaljniFragment : Fragment() {
                 {
                     Opis=""
                 }
+                var lati=""
+                var longi=""
+                if(latituda.text.toString().isEmpty())
+                {
+                    lati=staraLatituda.text.toString()
+
+                }
+                if(longituda.text.toString().isEmpty())
+                {
+                    longi=staraLongituda.text.toString()
+
+                }
+                if(latituda.text.toString().isNotEmpty())
+                {
+                    lati=latituda.text.toString()
+                }
+                if(longituda.text.toString().isNotEmpty())
+                {
+                    longi=longituda.text.toString()
+                }
                 val mesto = if(terenIzabran=="Fudbalski") {
-                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longituda.text.toString(), latituda.text.toString(),terenIzabran,"","","","","",posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),mrezaIzabrana,goloviIzabrana,podlogaFIzabrana,imgUrl)
+
+                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longi,lati,terenIzabran,"","","","","",posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),mrezaIzabrana,goloviIzabrana,podlogaFIzabrana,imgUrl)
 
                 } else {
-                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longituda.text.toString(), latituda.text.toString(),terenIzabran,sirinaIzabrana,osobinaIzabrana,podlogaKIzabrana,koseviIzabrana,mrezicaIzabrana,posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),"","","",imgUrl)
+                    Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longi, lati,terenIzabran,sirinaIzabrana,osobinaIzabrana,podlogaKIzabrana,koseviIzabrana,mrezicaIzabrana,posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),"","","",imgUrl)
                 }
                 DataBase.databasePlaces.child(key).setValue(mesto).addOnSuccessListener {
 
