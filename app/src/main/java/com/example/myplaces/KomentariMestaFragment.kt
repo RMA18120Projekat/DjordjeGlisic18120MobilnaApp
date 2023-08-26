@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -175,13 +176,11 @@ class KomentariMestaFragment : Fragment() {
                     if(provera.idKorisnika==sharedViewModel.ime&&provera.idKomentara==clan.id&&provera.podrzao==true)
                     {
                         pozitivni.setBackgroundColor(resources.getColor(R.color.lightGreen))
-                        pozitivni.isEnabled=false
 
                     }
                     else if(provera.idKorisnika==sharedViewModel.ime&&provera.idKomentara==clan.id&&provera.podrzao==false)
                     {
                         negativni.setBackgroundColor(resources.getColor(R.color.lightRed))
-                        negativni.isEnabled=false
 
                     }
                 }
@@ -191,35 +190,86 @@ class KomentariMestaFragment : Fragment() {
                         if(snapshot.exists())
                         {
                             var komentarBaza=Comments(snapshot.child("id").value.toString(),snapshot.child("autor").value.toString(),snapshot.child("mesto").value.toString(),snapshot.child("ocena").value.toString().toInt(),snapshot.child("komentar").value.toString(),snapshot.child("datum").value.toString(),snapshot.child("vreme").value.toString(),snapshot.child("pozitivni").value.toString().toInt(),snapshot.child("negativni").value.toString().toInt())
-                            var podrzaoJe=false
+                            var neutralan=false
+                            var menja=false
+                            var idKomentara=""
                             for(podrzao in nizOsoba)
                             {
+                                //VEC JE TAJ KORISNIK ZA TAJ KOMENTAR STAVIO POZITIVAN
+                                if(podrzao.idKomentara==pozitivni.hint&&podrzao.idKorisnika==sharedViewModel.ime&&podrzao.podrzao==true)
+                                {
+                                    neutralan=true
+                                    menja=false
+                                    idKomentara=podrzao.id
+                                    break
+
+
+
+                                }
                                 //VEC JE TAJ KORISNIK ZA TAJ KOMENTAR STAVIO NEGATIVAN
-                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==pozitivni.hint&&podrzao.podrzao==false)
+                               else if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==pozitivni.hint&&podrzao.podrzao==false)
                                 {
                                     //ODUZMI PRETHODNO DODAT NEGATIVNI I OBRISI GA IZ BAZE TAJ 1 TO 1 VEZU
-                                    komentarBaza.negativni=komentarBaza.negativni.minus(1)
-                                    DataBase.dataBaseOneToOne.child(podrzao.id).removeValue()
+                                    neutralan=false
+                                    menja=true
+                                    idKomentara=podrzao.id
+                                    break
+
+
 
                                 }
-                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==pozitivni.hint&&podrzao.podrzao==true)
-                                {
-                                    //AKO JE PRETHODNO TAJ KOMENTAR PODRZAO INDIKATOR JE TRUE
-                                    podrzaoJe=true
 
-                                }
+
                             }
-                            //AKO NIJE DO SADA PODRZAO TAJ KOMENTAR TAJ KORISNIK
-                            if(podrzaoJe==false) {
+                            if(neutralan==false&&menja==false)
+                            {
                                 komentarBaza.pozitivni = komentarBaza.pozitivni.plus(1)
                                 DataBase.databaseComments.child(komentarBaza.id)
                                     .setValue(komentarBaza).addOnSuccessListener {
-                                        var id =System.currentTimeMillis().toString()
-                                        var pozitivan=KorisnikKomentarP(id,sharedViewModel.ime,pozitivni.hint.toString(),true)
-                                        DataBase.dataBaseOneToOne.child(id).setValue(pozitivan).addOnSuccessListener {  }
+                                        var id = System.currentTimeMillis().toString()
+                                        var pozitivan = KorisnikKomentarP(
+                                            id,
+                                            sharedViewModel.ime,
+                                            pozitivni.hint.toString(),
+                                            true
+                                        )
+                                        DataBase.dataBaseOneToOne.child(id).setValue(pozitivan)
+                                            .addOnSuccessListener { }
+                                    }
+
+
+                            }
+                           else if(neutralan==true)
+                            {
+                                komentarBaza.pozitivni=komentarBaza.pozitivni.minus(1)
+                                //AKO JE PRETHODNO TAJ KOMENTAR PODRZAO INDIKATOR JE TRUE
+
+                                DataBase.dataBaseOneToOne.child(idKomentara).removeValue().addOnSuccessListener {
+                                    DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {  }
+
 
                                 }
+
                             }
+                            else if(menja==true)
+                            {
+                                komentarBaza.negativni=komentarBaza.negativni.minus(1)
+                                komentarBaza.pozitivni=komentarBaza.pozitivni.plus(1)
+                                DataBase.dataBaseOneToOne.child(idKomentara).removeValue().addOnSuccessListener {DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {
+                                    var id = System.currentTimeMillis().toString()
+                                    var pozitivan = KorisnikKomentarP(
+                                        id,
+                                        sharedViewModel.ime,
+                                        pozitivni.hint.toString(),
+                                        true
+                                    )
+                                    DataBase.dataBaseOneToOne.child(id).setValue(pozitivan)
+                                        .addOnSuccessListener { }
+
+                                } }
+
+                            }
+
                         }
 
                     }
@@ -230,33 +280,78 @@ class KomentariMestaFragment : Fragment() {
                     DataBase.databaseComments.child(negativni.hint.toString()).get().addOnSuccessListener {snapshot->
                         if(snapshot.exists())
                         {
+                            var neutralan=false
+                            var menja=false
+                            var komentarId=""
                             var komentarBaza=Comments(snapshot.child("id").value.toString(),snapshot.child("autor").value.toString(),snapshot.child("mesto").value.toString(),snapshot.child("ocena").value.toString().toInt(),snapshot.child("komentar").value.toString(),snapshot.child("datum").value.toString(),snapshot.child("vreme").value.toString(),snapshot.child("pozitivni").value.toString().toInt(),snapshot.child("negativni").value.toString().toInt())
-                            var podrzaoJe=false
                             for(podrzao in nizOsoba)
                             {
-                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==negativni.hint&&podrzao.podrzao==true)
+                                //VEC JE TAJ KORISNIK ZA TAJ KOMENTAR STAVIO NEGATIVAN
+                                if(podrzao.idKomentara==pozitivni.hint&&podrzao.idKorisnika==sharedViewModel.ime&&podrzao.podrzao==false)
                                 {
-                                    komentarBaza.pozitivni=komentarBaza.pozitivni.minus(1)
-                                    DataBase.dataBaseOneToOne.child(podrzao.id).removeValue()
+                                    neutralan=true
+                                    menja=false
+                                    komentarId=podrzao.id
+                                    break
+
+
 
                                 }
-                                if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==negativni.hint&&podrzao.podrzao==false)
+                               else if(podrzao.idKorisnika==sharedViewModel.ime&&podrzao.idKomentara==negativni.hint&&podrzao.podrzao==true)
                                 {
-                                    podrzaoJe=true
+                                    neutralan=false
+                                    menja=true
+                                    komentarId=podrzao.id
+                                    break
 
                                 }
+
+
                             }
-                            if(podrzaoJe==false) {
+                            if(neutralan==false&&menja==false)
+                            {
                                 komentarBaza.negativni = komentarBaza.negativni.plus(1)
+
                                 DataBase.databaseComments.child(komentarBaza.id)
                                     .setValue(komentarBaza).addOnSuccessListener {
-                                        var id=System.currentTimeMillis().toString()
-                                        var negativan=KorisnikKomentarP(id,sharedViewModel.ime,negativni.hint.toString(),false)
-                                        DataBase.dataBaseOneToOne.child(id).setValue(negativan).addOnSuccessListener {  }
-
-
+                                        var id = System.currentTimeMillis().toString()
+                                        var negativan = KorisnikKomentarP(
+                                            id,
+                                            sharedViewModel.ime,
+                                            negativni.hint.toString(),
+                                            false
+                                        )
+                                        DataBase.dataBaseOneToOne.child(id).setValue(negativan)
+                                            .addOnSuccessListener { }
                                     }
+
+
+
                             }
+                            else if(neutralan==true)
+                            {
+                                komentarBaza.negativni=komentarBaza.negativni.minus(1)
+                                DataBase.dataBaseOneToOne.child(komentarId).removeValue().addOnSuccessListener{
+                                    DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {  }
+
+                                }
+
+                            }
+                            else if(menja==true)
+                            {
+                                komentarBaza.pozitivni=komentarBaza.pozitivni.minus(1)
+                                komentarBaza.negativni=komentarBaza.negativni.plus(1)
+                                DataBase.dataBaseOneToOne.child(komentarId).removeValue().addOnSuccessListener {
+                                    var id=System.currentTimeMillis()
+                                    var novi=KorisnikKomentarP(id.toString(),sharedViewModel.ime,negativni.hint.toString(),false)
+                                    DataBase.dataBaseOneToOne.child(id.toString()).setValue(novi).addOnSuccessListener { DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {  } }
+                                }
+
+
+
+
+                            }
+
                         }
 
                     }
