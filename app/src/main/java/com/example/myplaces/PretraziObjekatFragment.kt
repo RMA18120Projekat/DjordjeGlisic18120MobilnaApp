@@ -653,7 +653,9 @@ class PretraziObjekatFragment : Fragment() {
                         }
                     }
                     komentarisi.setOnClickListener{
-                        if(sharedViewModel.user.korisnicko!=mesto.autor) {
+                        var nasaLok=GeoPoint(locationViewModel.getSvojaLati(),locationViewModel.getSvojaLongi())
+                        var kliknutaLok=GeoPoint(mesto.latituda.toString().toDouble(),mesto.longituda.toString().toDouble())
+                        if(sharedViewModel.user.korisnicko!=mesto.autor&&nasaLok.distanceToAsDouble(kliknutaLok)<1000) {
                             locationViewModel.setLocationAndName(
                                 mesto.longituda.toString(),
                                 mesto.latituda.toString(),
@@ -662,9 +664,13 @@ class PretraziObjekatFragment : Fragment() {
                             )
                             findNavController().navigate(R.id.action_pretraziObjekatFragment_to_komentarOcenaFragment)
                         }
-                        else
+                        else if(sharedViewModel.user.korisnicko==mesto.autor)
                         {
                             Toast.makeText(context,"Ovo mesto ste vi dodali s toga ga ne mozete komentarisati",Toast.LENGTH_SHORT).show()
+                        }
+                        else
+                        {
+                            Toast.makeText(context,"Izabrano mesto Vam nije u blizini s toga ga ne mozete komentarisati",Toast.LENGTH_SHORT).show()
                         }
                     }
 
