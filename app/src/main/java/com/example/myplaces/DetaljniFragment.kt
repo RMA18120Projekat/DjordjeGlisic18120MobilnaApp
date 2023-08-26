@@ -59,6 +59,7 @@ class DetaljniFragment : Fragment() {
     private lateinit var staraLatituda:TextView
     private lateinit var staraLongituda:TextView
     private lateinit var svojiKomentari:Button
+    private lateinit var bar:ProgressBar
     //////////////////////////////////////
     ////////////////////////////////////////
 
@@ -147,6 +148,7 @@ class DetaljniFragment : Fragment() {
         staraLatituda=view.findViewById(R.id.latitudaStara)
         staraLongituda=view.findViewById(R.id.longitudaStara)
         svojiKomentari=view.findViewById(R.id.komentariSvogaMesta)
+        bar=view.findViewById(R.id.zaSlikuBar)
 
 
 
@@ -751,12 +753,17 @@ class DetaljniFragment : Fragment() {
 //FUNKCIJA ZA UPIS U BAZU PA PREUZIMANJE URL SLIKE SA STORIGA I CUVANJE U LOKALNU PROMENLJIVU KOJA CE SLUZITI ZA UZIMANJE PODATKA
 //O ATRIBUTU Places.Img:String
 private fun preuzmiSLiku() {
-
+bar.visibility=View.VISIBLE
+    slika.visibility=View.GONE
 
     if (imgUrl != "") {
         Glide.with(requireContext())
             .load(imgUrl)
             .into(slika)
+        bar.visibility=View.GONE
+        slika.visibility=View.VISIBLE
+
+
     }
 }
     private fun posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap:Bitmap)
@@ -770,6 +777,8 @@ private fun preuzmiSLiku() {
 
     // Upload the image to Firebase Storage
     val uploadTask = imagesRef.putBytes(imageData)
+    bar.visibility=View.VISIBLE
+    slika.visibility=View.GONE
     uploadTask.addOnCompleteListener { task ->
         if (task.isSuccessful) {
             // Image upload success
@@ -777,6 +786,9 @@ private fun preuzmiSLiku() {
             imagesRef.downloadUrl.addOnSuccessListener { uri ->
                 // Save the URI to the database or use it as needed
                 imgUrl = uri.toString()
+                bar.visibility=View.GONE
+                slika.visibility=View.VISIBLE
+
                 preuzmiSLiku()
                 // Add the code to save the URL to the user's data in Firebase Database here
             }.addOnFailureListener { exception ->
