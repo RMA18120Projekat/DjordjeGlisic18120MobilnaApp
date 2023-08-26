@@ -625,6 +625,7 @@ class DetaljniFragment : Fragment() {
                 set.visibility=View.GONE
                 openCameraButton.visibility=View.GONE
                 openGalleryButton.visibility=View.GONE
+                svojiKomentari.visibility=View.GONE
                 sharedViewModel.latituda=""
                 sharedViewModel.longituda=""
                 for(komentar in nizKometara)

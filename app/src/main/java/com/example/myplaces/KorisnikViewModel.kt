@@ -18,6 +18,8 @@ class KorisnikViewModel: ViewModel() {
     var izabranoMesto:String=""
     var longituda=""
     var latituda=""
+    var prethodnaLa=""
+    var prethodnaLo=""
     var user:User=User()
     var place:Places=Places()
     //SVI KORISNICI IZ BAZE

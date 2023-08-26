@@ -166,6 +166,22 @@ private lateinit var buttonInfo:Button
         textPK.visibility=View.GONE
         textVisina=view.findViewById(R.id.TextVisina)
         textVisina.visibility=View.GONE
+        DataBase.databasePlaces.child(naziv.text.toString()).get().addOnCompleteListener{task->
+            if(task.isSuccessful==true)
+            {
+                var snapShot=task.result
+                if(snapShot.exists()==false)
+                {
+                    naziv.text=""
+                    latituda.text=""
+                    longituda.text=""
+                    posalji.isEnabled=false
+                    sviKomentari.isEnabled=false
+                    buttonInfo.isEnabled=false
+
+                }
+            }
+        }
 
 
 
@@ -282,6 +298,18 @@ private lateinit var buttonInfo:Button
 
 
         posalji.setOnClickListener{
+            var postoji=true
+            DataBase.databasePlaces.child(naziv.text.toString()).get().addOnCompleteListener{task->
+                if(task.isSuccessful==true)
+                {
+                    var snapShot=task.result
+                    if(snapShot.exists()==false)
+                    {
+                        postoji=false
+                    }
+                }
+            }
+            if(postoji==true){
             if(naziv.text.toString().isEmpty()||ocena.text.toString().isEmpty()||komentar.text.toString().isEmpty())
             {
                 Toast.makeText(context,"Niste popunili sva polja",Toast.LENGTH_SHORT).show()
@@ -293,13 +321,13 @@ private lateinit var buttonInfo:Button
                 var id =naziv.text.toString()+ocena.text.toString()+komentar.text.toString()+sharedViewModel.ime.toString()
                 id= id.replace(".", "").replace("#", "").replace("$", "").replace("[", "").replace("]", "").replace("@","")
                 var instanca= Calendar.getInstance()
-                var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
+                var mesec=instanca.get(Calendar.MONTH).toInt()+1
+                var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+mesec.toString()+"."+instanca.get(Calendar.YEAR)
                 var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
                 var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString(),datum,vreme,0,0)
                 DataBase.databaseComments.child(id).setValue(koment).addOnCompleteListener{
                     Toast.makeText(context,"Uspesno ste dodali komentar",Toast.LENGTH_SHORT).show()
                     progress.visibility=View.GONE
-                    DataBase.id=DataBase.id+1
                     DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
                         .replace("$", "").replace("[", "").replace("]", "")
                     ).get().addOnSuccessListener { snapshotU->
@@ -317,7 +345,8 @@ private lateinit var buttonInfo:Button
                                     if(sna.exists())
                                     {
                                         var mesto:Places=Places(sna.child("naziv").value.toString(),sna.child("komentar").value.toString(),sna.child("ocena").value.toString().toInt(),sna.child("autor").value.toString(),sna.child("longituda").value.toString(),sna.child("latituda").value.toString(),sna.child("teren").value.toString(),sna.child("sirinaObruca").value.toString(),sna.child("osobinaObruca").value.toString(),sna.child("podlogaKosarka").value.toString(),sna.child("visinaKosa").value.toString(),sna.child("mrezica").value.toString(),sna.child("posecenost").value.toString(),sna.child("dimenzije").value.toString(),sna.child("rasveta").value.toString(),sna.child("prosecanBrojLjudi").value.toString().toIntOrNull(),sna.child("mreza").value.toString(),sna.child("golovi").value.toString(),sna.child("podlogaFudbal").value.toString(),sna.child("img").value.toString(),sna.child("datumVreme").value.toString())
-                                        var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
+                                        var tacanMesec=instanca.get(Calendar.MONTH)+1
+                                        var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+tacanMesec.toString()+"."+instanca.get(Calendar.YEAR)
                                         var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
                                         var datumVreme=datum+" u "+vreme
                                         mesto.datumInterakcije=datumVreme
@@ -335,6 +364,11 @@ private lateinit var buttonInfo:Button
                 }.addOnFailureListener{
                     Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
                 }
+            }
+             }
+            else{
+                Toast.makeText(context,"Izabrano mesto vise nije u bazi (izbrisano je)",Toast.LENGTH_LONG).show()
+
             }
         }
         sviKomentari.setOnClickListener{

@@ -28,7 +28,6 @@ class LocationViewModel: ViewModel() {
     private val _latitude=MutableLiveData<String>("")
     val latitude:LiveData<String>
         get()=_latitude
-    var setLocation:Boolean=false
     var dodajObjekat:Boolean=false
     var samoPregled:Boolean=false
     var jedanObjekat:Boolean=false

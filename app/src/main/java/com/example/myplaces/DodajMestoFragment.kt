@@ -107,6 +107,7 @@ class DodajMestoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view=inflater.inflate(R.layout.fragment_dodaj_mesto,container,false)
+
         slika=view.findViewById(R.id.slikaObjekta)
         slika.visibility=View.VISIBLE
         nazivMesta=view.findViewById(R.id.editTextNazivMesta)
@@ -381,21 +382,27 @@ class DodajMestoFragment : Fragment() {
         }
         ///////////////////////////////////////////////////////////////////////////////
         potvrdi.setOnClickListener {
+            if(sharedViewModel.prethodnaLa==latituda.text.toString()&&sharedViewModel.prethodnaLo==longituda.text.toString())
+            {
+                Toast.makeText(context,"Na ovoj lokaciji postoji objekat",Toast.LENGTH_SHORT).show()
+            }
+            else {
 
                 val nazivPom = nazivMesta.text.toString()
                 var opisPom = opisMesta.text.toString()
                 val ocenaPom = ocenaMesta.text.toString()
-                if( (nazivPom.isNotEmpty() && ocenaPom.isNotEmpty()&&ocenaPom.toInt()>=5&&ocenaPom.toInt()<=10)||(nazivPom.isNotEmpty()&&ocenaPom.isNotEmpty()&&ocenaPom.toInt()<5&&ocenaPom.toInt()>=1&&opisPom.isNotEmpty()) ){
-                    var instanca= Calendar.getInstance()
-                    var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+instanca.get(
-                        Calendar.MONTH).toString()+"."+instanca.get(Calendar.YEAR)
-                    var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(
-                        Calendar.MINUTE)
-                    var datumVreme=datum+" u "+vreme
+                if ((nazivPom.isNotEmpty() && ocenaPom.isNotEmpty() && ocenaPom.toInt() >= 5 && ocenaPom.toInt() <= 10) || (nazivPom.isNotEmpty() && ocenaPom.isNotEmpty() && ocenaPom.toInt() < 5 && ocenaPom.toInt() >= 1 && opisPom.isNotEmpty())) {
+                    var instanca = Calendar.getInstance()
+                    var mesec = instanca.get(Calendar.MONTH).toInt() + 1
+                    var datum = instanca.get(Calendar.DAY_OF_MONTH)
+                        .toString() + "." + mesec.toString() + "." + instanca.get(Calendar.YEAR)
+                    var vreme = instanca.get(Calendar.HOUR_OF_DAY).toString() + ":" + instanca.get(
+                        Calendar.MINUTE
+                    )
+                    var datumVreme = datum + " u " + vreme
                     progress.visibility = View.VISIBLE
-                    if(opisMesta.text.toString().isEmpty())
-                    {
-                        opisPom=""
+                    if (opisMesta.text.toString().isEmpty()) {
+                        opisPom = ""
                     }
                     if (terenIzabran == "Fudbalski") {
 
@@ -457,6 +464,8 @@ class DodajMestoFragment : Fragment() {
                     DataBase.databasePlaces.child(key).setValue(mesto)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
+                                sharedViewModel.prethodnaLa = latituda.text.toString()
+                                sharedViewModel.prethodnaLo = longituda.text.toString()
                                 progress.visibility = View.GONE
                                 Toast.makeText(
                                     context,
@@ -468,24 +477,43 @@ class DodajMestoFragment : Fragment() {
                                 ocenaMesta.text.clear()
                                 longituda.setText("")
                                 latituda.setText("")
-                                slika.visibility=View.GONE
-                                DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
-                                    .replace("$", "").replace("[", "").replace("]", "")).get().addOnSuccessListener { snapshot->
-                                    if(snapshot.exists())
-                                    {
-                                        sharedViewModel.user=User(snapshot.child("korisnicko").value.toString(),snapshot.child("sifra").value.toString(),snapshot.child("ime").value.toString(),snapshot.child("prezime").value.toString(),snapshot.child("brojTelefona").value.toString().toLongOrNull(),snapshot.child("img").value.toString(),ArrayList(),snapshot.child("bodovi").value.toString().toIntOrNull())
-                                        sharedViewModel.user.bodovi=sharedViewModel.user.bodovi?.plus(10)
-                                        DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
-                                            .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
+                                slika.visibility = View.GONE
+                                DataBase.databaseUsers.child(
+                                    sharedViewModel.ime.replace(".", "").replace("#", "")
+                                        .replace("$", "").replace("[", "").replace("]", "")
+                                ).get().addOnSuccessListener { snapshot ->
+                                    if (snapshot.exists()) {
+                                        sharedViewModel.user = User(
+                                            snapshot.child("korisnicko").value.toString(),
+                                            snapshot.child("sifra").value.toString(),
+                                            snapshot.child("ime").value.toString(),
+                                            snapshot.child("prezime").value.toString(),
+                                            snapshot.child("brojTelefona").value.toString()
+                                                .toLongOrNull(),
+                                            snapshot.child("img").value.toString(),
+                                            ArrayList(),
+                                            snapshot.child("bodovi").value.toString().toIntOrNull()
+                                        )
+                                        sharedViewModel.user.bodovi =
+                                            sharedViewModel.user.bodovi?.plus(10)
+                                        DataBase.databaseUsers.child(
+                                            sharedViewModel.ime.replace(".", "").replace("#", "")
+                                                .replace("$", "").replace("[", "").replace("]", "")
+                                        ).setValue(sharedViewModel.user).addOnSuccessListener {
 
-                                                Toast.makeText(context,"Dobili ste jos 10 bodova",Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                context,
+                                                "Dobili ste jos 10 bodova",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }.addOnFailureListener {
-                                            Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, "Greska", Toast.LENGTH_LONG)
+                                                .show()
                                         }
                                     }
 
-                                }.addOnFailureListener{
-                                    Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                                }.addOnFailureListener {
+                                    Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
                                 }
 
                             } else {
@@ -497,8 +525,13 @@ class DodajMestoFragment : Fragment() {
 
                 } else {
 
-                    Toast.makeText(context, "Niste popunili sva polja, ako ste dali ocenu manju od 6 morate napisati komentar sta se treba ispraviti.Ocena je od 1-10", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Niste popunili sva polja, ako ste dali ocenu manju od 6 morate napisati komentar sta se treba ispraviti.Ocena je od 1-10",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
 
 
         }
