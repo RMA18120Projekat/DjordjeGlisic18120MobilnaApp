@@ -69,7 +69,6 @@ class KomentariMestaFragment : Fragment() {
             if(clan.mesto.toString()==locationViewModel.nazivMesta.value.toString())
             {
                 kolko++
-                Toast.makeText(context,"Uso sam u if",Toast.LENGTH_SHORT).show()
                 layout.orientation=LinearLayout.VERTICAL
                 val layoutParamsLayout = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -234,7 +233,46 @@ class KomentariMestaFragment : Fragment() {
                                             true
                                         )
                                         DataBase.dataBaseOneToOne.child(id).setValue(pozitivan)
-                                            .addOnSuccessListener { }
+                                            .addOnSuccessListener {
+                                                DataBase.databaseUsers.child(
+                                                    sharedViewModel.ime.replace(".", "")
+                                                        .replace("#", "")
+                                                        .replace("$", "").replace("[", "")
+                                                        .replace("]", "")
+                                                ).get().addOnSuccessListener { snapshotU ->
+                                                    if (snapshotU.exists()) {
+                                                        sharedViewModel.user = User(
+                                                            snapshotU.child("korisnicko").value.toString(),
+                                                            snapshotU.child("sifra").value.toString(),
+                                                            snapshotU.child("ime").value.toString(),
+                                                            snapshotU.child("prezime").value.toString(),
+                                                            snapshotU.child("brojTelefona").value.toString()
+                                                                .toLongOrNull(),
+                                                            snapshotU.child("img").value.toString(),
+                                                            ArrayList(),
+                                                            snapshotU.child("bodovi").value.toString()
+                                                                .toIntOrNull()
+                                                        )
+                                                        sharedViewModel.user.bodovi =
+                                                            sharedViewModel.user.bodovi?.plus(2)
+                                                        DataBase.databaseUsers.child(
+                                                            sharedViewModel.ime.replace(".", "")
+                                                                .replace("#", "")
+                                                                .replace("$", "").replace("[", "")
+                                                                .replace("]", "")
+                                                        ).setValue(sharedViewModel.user)
+                                                            .addOnSuccessListener {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Dobili ste 2 boda ",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+
+                                                            }
+
+                                                    }
+                                                }
+                                            }
                                     }
 
 
@@ -245,7 +283,46 @@ class KomentariMestaFragment : Fragment() {
                                 //AKO JE PRETHODNO TAJ KOMENTAR PODRZAO INDIKATOR JE TRUE
 
                                 DataBase.dataBaseOneToOne.child(idKomentara).removeValue().addOnSuccessListener {
-                                    DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {  }
+                                    DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {
+                                        DataBase.databaseUsers.child(
+                                            sharedViewModel.ime.replace(".", "")
+                                                .replace("#", "")
+                                                .replace("$", "").replace("[", "")
+                                                .replace("]", "")
+                                        ).get().addOnSuccessListener { snapshotU ->
+                                            if (snapshotU.exists()) {
+                                                sharedViewModel.user = User(
+                                                    snapshotU.child("korisnicko").value.toString(),
+                                                    snapshotU.child("sifra").value.toString(),
+                                                    snapshotU.child("ime").value.toString(),
+                                                    snapshotU.child("prezime").value.toString(),
+                                                    snapshotU.child("brojTelefona").value.toString()
+                                                        .toLongOrNull(),
+                                                    snapshotU.child("img").value.toString(),
+                                                    ArrayList(),
+                                                    snapshotU.child("bodovi").value.toString()
+                                                        .toIntOrNull()
+                                                )
+                                                sharedViewModel.user.bodovi =
+                                                    sharedViewModel.user.bodovi?.minus(2)
+                                                DataBase.databaseUsers.child(
+                                                    sharedViewModel.ime.replace(".", "")
+                                                        .replace("#", "")
+                                                        .replace("$", "").replace("[", "")
+                                                        .replace("]", "")
+                                                ).setValue(sharedViewModel.user)
+                                                    .addOnSuccessListener {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Izgubili ste 2 boda",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+
+                                                    }
+
+                                            }
+                                        }
+                                    }
 
 
                                 }
@@ -264,7 +341,11 @@ class KomentariMestaFragment : Fragment() {
                                         true
                                     )
                                     DataBase.dataBaseOneToOne.child(id).setValue(pozitivan)
-                                        .addOnSuccessListener { }
+                                        .addOnSuccessListener {
+
+
+
+                                        }
 
                                 } }
 
@@ -308,8 +389,7 @@ class KomentariMestaFragment : Fragment() {
 
 
                             }
-                            if(neutralan==false&&menja==false)
-                            {
+                            if(neutralan==false&&menja==false) {
                                 komentarBaza.negativni = komentarBaza.negativni.plus(1)
 
                                 DataBase.databaseComments.child(komentarBaza.id)
@@ -322,17 +402,94 @@ class KomentariMestaFragment : Fragment() {
                                             false
                                         )
                                         DataBase.dataBaseOneToOne.child(id).setValue(negativan)
-                                            .addOnSuccessListener { }
+                                            .addOnSuccessListener {
+                                                DataBase.databaseUsers.child(
+                                                    sharedViewModel.ime.replace(".", "")
+                                                        .replace("#", "")
+                                                        .replace("$", "").replace("[", "")
+                                                        .replace("]", "")
+                                                ).get().addOnSuccessListener { snapshotU ->
+                                                    if (snapshotU.exists()) {
+                                                        sharedViewModel.user = User(
+                                                            snapshotU.child("korisnicko").value.toString(),
+                                                            snapshotU.child("sifra").value.toString(),
+                                                            snapshotU.child("ime").value.toString(),
+                                                            snapshotU.child("prezime").value.toString(),
+                                                            snapshotU.child("brojTelefona").value.toString()
+                                                                .toLongOrNull(),
+                                                            snapshotU.child("img").value.toString(),
+                                                            ArrayList(),
+                                                            snapshotU.child("bodovi").value.toString()
+                                                                .toIntOrNull()
+                                                        )
+                                                        sharedViewModel.user.bodovi =
+                                                            sharedViewModel.user.bodovi?.plus(2)
+                                                        DataBase.databaseUsers.child(
+                                                            sharedViewModel.ime.replace(".", "")
+                                                                .replace("#", "")
+                                                                .replace("$", "").replace("[", "")
+                                                                .replace("]", "")
+                                                        ).setValue(sharedViewModel.user)
+                                                            .addOnSuccessListener {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Dobili  ste 2 boda",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+
+                                                            }
+
+                                                    }
+                                                }
+                                            }
+
+
                                     }
-
-
-
                             }
                             else if(neutralan==true)
                             {
                                 komentarBaza.negativni=komentarBaza.negativni.minus(1)
                                 DataBase.dataBaseOneToOne.child(komentarId).removeValue().addOnSuccessListener{
-                                    DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {  }
+                                    DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {
+                                        DataBase.databaseUsers.child(
+                                            sharedViewModel.ime.replace(".", "")
+                                                .replace("#", "")
+                                                .replace("$", "").replace("[", "")
+                                                .replace("]", "")
+                                        ).get().addOnSuccessListener { snapshotU ->
+                                            if (snapshotU.exists()) {
+                                                sharedViewModel.user = User(
+                                                    snapshotU.child("korisnicko").value.toString(),
+                                                    snapshotU.child("sifra").value.toString(),
+                                                    snapshotU.child("ime").value.toString(),
+                                                    snapshotU.child("prezime").value.toString(),
+                                                    snapshotU.child("brojTelefona").value.toString()
+                                                        .toLongOrNull(),
+                                                    snapshotU.child("img").value.toString(),
+                                                    ArrayList(),
+                                                    snapshotU.child("bodovi").value.toString()
+                                                        .toIntOrNull()
+                                                )
+                                                sharedViewModel.user.bodovi =
+                                                    sharedViewModel.user.bodovi?.minus(2)
+                                                DataBase.databaseUsers.child(
+                                                    sharedViewModel.ime.replace(".", "")
+                                                        .replace("#", "")
+                                                        .replace("$", "").replace("[", "")
+                                                        .replace("]", "")
+                                                ).setValue(sharedViewModel.user)
+                                                    .addOnSuccessListener {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Izgubili ste 2 boda",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+
+                                                    }
+
+                                            }
+                                        }
+                                    }
 
                                 }
 
@@ -344,7 +501,9 @@ class KomentariMestaFragment : Fragment() {
                                 DataBase.dataBaseOneToOne.child(komentarId).removeValue().addOnSuccessListener {
                                     var id=System.currentTimeMillis()
                                     var novi=KorisnikKomentarP(id.toString(),sharedViewModel.ime,negativni.hint.toString(),false)
-                                    DataBase.dataBaseOneToOne.child(id.toString()).setValue(novi).addOnSuccessListener { DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {  } }
+                                    DataBase.dataBaseOneToOne.child(id.toString()).setValue(novi).addOnSuccessListener { DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {
+                                        
+                                    } }
                                 }
 
 

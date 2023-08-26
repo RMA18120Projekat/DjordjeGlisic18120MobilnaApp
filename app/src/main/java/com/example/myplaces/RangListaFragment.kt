@@ -51,7 +51,7 @@ class RangListaFragment : Fragment() {
         tableRow.gravity = Gravity.CENTER
         // Lista sa sadržajem za TextView elemente
         val labels = listOf(
-            "Ime", "Prezime", "Korisnicko ime", "Broj telefona",
+            "Mesto","Ime", "Prezime", "Korisnicko ime", "Broj telefona",
             "Ukuapan broj bodova"
         )
 
@@ -86,6 +86,7 @@ class RangListaFragment : Fragment() {
             }
 
         }
+        var rank=1
         for (user in nizKorisnika) {
             val row = TableRow(context) // Kreiranje TableRow-a
             val rowParams = TableLayout.LayoutParams(
@@ -103,6 +104,7 @@ class RangListaFragment : Fragment() {
             textParams.marginEnd = 30.dpToPx()
 
             val textArray = arrayOf(
+
                 user.ime,
                 user.prezime,
                 user.korisnicko,
@@ -110,6 +112,13 @@ class RangListaFragment : Fragment() {
                 user.bodovi.toString(),
 
             )
+            val textView = TextView(context)
+            textView.layoutParams = textParams
+            textView.text = rank.toString()
+            rank++
+            textView.textAlignment=LinearLayout.TEXT_ALIGNMENT_CENTER
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            row.addView(textView)
 
             for (textValue in textArray) {
                 val textView = TextView(context)
