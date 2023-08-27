@@ -640,6 +640,8 @@ class PretraziObjekatFragment : Fragment() {
                             val end=GeoPoint(mesto.latituda.toString().toDouble(),mesto.longituda.toString().toDouble())
                             if(start.distanceToAsDouble(end)<1000) {
                                 sharedViewModel.izabranoMesto = mesto.naziv.toString()
+                                sharedViewModel.azurirajBrisi=true
+                                sharedViewModel.komentarisi=false
                                 findNavController().navigate(R.id.action_pretraziObjekatFragment_to_detaljniFragment2)
                             }
                             else
@@ -662,6 +664,8 @@ class PretraziObjekatFragment : Fragment() {
                                 mesto.naziv.toString(),
                                 true
                             )
+                            sharedViewModel.komentarisi=true
+                            sharedViewModel.azurirajBrisi=false
                             findNavController().navigate(R.id.action_pretraziObjekatFragment_to_komentarOcenaFragment)
                         }
                         else if(sharedViewModel.user.korisnicko==mesto.autor)

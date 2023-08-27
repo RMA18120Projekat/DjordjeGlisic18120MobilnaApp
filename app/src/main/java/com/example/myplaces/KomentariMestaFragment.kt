@@ -502,7 +502,7 @@ class KomentariMestaFragment : Fragment() {
                                     var id=System.currentTimeMillis()
                                     var novi=KorisnikKomentarP(id.toString(),sharedViewModel.ime,negativni.hint.toString(),false)
                                     DataBase.dataBaseOneToOne.child(id.toString()).setValue(novi).addOnSuccessListener { DataBase.databaseComments.child(komentarBaza.id).setValue(komentarBaza).addOnSuccessListener {
-                                        
+
                                     } }
                                 }
 

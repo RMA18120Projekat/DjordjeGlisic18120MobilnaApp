@@ -765,6 +765,10 @@ bar.visibility=View.VISIBLE
 
 
     }
+    else
+    {
+        bar.visibility=View.GONE
+    }
 }
     private fun posaljiSlikuUFireStoragePreuzmiURLiPosaljiURealtimeDatabase(imageBitmap:Bitmap)
 {

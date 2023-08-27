@@ -22,6 +22,8 @@ class KorisnikViewModel: ViewModel() {
     var prethodnaLo=""
     var user:User=User()
     var place:Places=Places()
+    var azurirajBrisi=false
+    var komentarisi=false
     //SVI KORISNICI IZ BAZE
     private var korisnici:ArrayList<User> = ArrayList()
     private val _users=MutableLiveData<ArrayList<User>>()

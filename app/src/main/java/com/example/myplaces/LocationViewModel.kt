@@ -32,6 +32,13 @@ class LocationViewModel: ViewModel() {
     var samoPregled:Boolean=false
     var jedanObjekat:Boolean=false
     var komentarisiObjekat:Boolean=false
+    private val _latitudaKoment=MutableLiveData<String>("")
+    val latitudaKoment:LiveData<String>
+        get()=_latitudaKoment
+    private val _longitudaKoment=MutableLiveData<String>("")
+    val longitudaKoment:LiveData<String>
+        get()=_longitudaKoment
+
 
     // i sa neki od nji bude true zavisno od dugme na koje se klikne
     fun setLocation(lon:String,lat:String)
@@ -46,6 +53,20 @@ class LocationViewModel: ViewModel() {
         _latitude.value=lat
         _nazivMesta.value=NazivMesta
         _baza.value=base
+
+    }
+    fun setLocationAndNameKoment(lon:String,lat:String,NazivMesta:String,base:Boolean)
+    {
+        _longitudaKoment.value=lon
+        _latitudaKoment.value=lat
+        _nazivMesta.value=NazivMesta
+        _baza.value=base
+
+    }
+    fun setLocationKoment(lon:String,lat:String)
+    {
+        _longitudaKoment.value=lon
+        _latitudaKoment.value=lat
 
     }
     fun setName(name:String)

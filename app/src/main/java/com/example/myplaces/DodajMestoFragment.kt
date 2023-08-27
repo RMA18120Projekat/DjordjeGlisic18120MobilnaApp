@@ -559,7 +559,9 @@ class DodajMestoFragment : Fragment() {
         openGalleryButton.setOnClickListener{
             if (checkGalleryPermission()) {
                 val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(galleryIntent, GALLERY_PERMISSION_REQUEST_CODE)
+                if(galleryIntent.resolveActivity(requireActivity().packageManager)!=null) {
+                    startActivityForResult(galleryIntent, GALLERY_PERMISSION_REQUEST_CODE)
+                }
             } else {
                 // Ako dozvola nije odobrena, zahtevajte je
                 ActivityCompat.requestPermissions(

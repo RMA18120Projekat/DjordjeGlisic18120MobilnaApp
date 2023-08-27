@@ -16,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import org.osmdroid.util.GeoPoint
 import org.w3c.dom.Text
 import java.util.Calendar
 
@@ -98,13 +99,13 @@ private lateinit var buttonInfo:Button
 
 
         }
-        locationViewModel.longitude.observe(viewLifecycleOwner,lonObserver)
+        locationViewModel.longitudaKoment.observe(viewLifecycleOwner,lonObserver)
         val latiObserver= Observer<String>{newValue->
             latituda.setText(newValue.toString())
             sharedViewModel.latituda=latituda.text.toString()
 
         }
-        locationViewModel.latitude.observe(viewLifecycleOwner,latiObserver)
+        locationViewModel.latitudaKoment.observe(viewLifecycleOwner,latiObserver)
         val nazivObserver= Observer<String> {newValue->
             naziv.text=newValue.toString()
             //locationViewModel.nazivMesta=newValue.toString()
@@ -310,59 +311,131 @@ private lateinit var buttonInfo:Button
                 }
             }
             if(postoji==true){
-            if(naziv.text.toString().isEmpty()||ocena.text.toString().isEmpty()||komentar.text.toString().isEmpty())
+            if(naziv.text.toString().isEmpty()||ocena.text.toString().isEmpty()||ocena.text.toString().toInt()>10||ocena.text.toString().toInt()<1||komentar.text.toString().isEmpty())
             {
-                Toast.makeText(context,"Niste popunili sva polja",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Niste popunili sva polja ili niste dali adekvatnu ocenu",Toast.LENGTH_SHORT).show()
 
             }
             else
             {
-                progress.visibility=View.VISIBLE
-                var id =naziv.text.toString()+ocena.text.toString()+komentar.text.toString()+sharedViewModel.ime.toString()
-                id= id.replace(".", "").replace("#", "").replace("$", "").replace("[", "").replace("]", "").replace("@","")
-                var instanca= Calendar.getInstance()
-                var mesec=instanca.get(Calendar.MONTH).toInt()+1
-                var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+mesec.toString()+"."+instanca.get(Calendar.YEAR)
-                var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
-                var koment:Comments= Comments(id,sharedViewModel.ime,naziv.text.toString(),ocena.text.toString().toInt(),komentar.text.toString(),datum,vreme,0,0)
-                DataBase.databaseComments.child(id).setValue(koment).addOnCompleteListener{
-                    Toast.makeText(context,"Uspesno ste dodali komentar",Toast.LENGTH_SHORT).show()
-                    progress.visibility=View.GONE
-                    DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
-                        .replace("$", "").replace("[", "").replace("]", "")
-                    ).get().addOnSuccessListener { snapshotU->
-                        if(snapshotU.exists())
-                        {
-                            sharedViewModel.user=User(snapshotU.child("korisnicko").value.toString(),snapshotU.child("sifra").value.toString(),snapshotU.child("ime").value.toString(),snapshotU.child("prezime").value.toString(),snapshotU.child("brojTelefona").value.toString().toLongOrNull(),snapshotU.child("img").value.toString(),ArrayList(),snapshotU.child("bodovi").value.toString().toIntOrNull())
-                            sharedViewModel.user.bodovi=sharedViewModel.user.bodovi?.plus(5)
-                            DataBase.databaseUsers.child(sharedViewModel.ime.replace(".", "").replace("#", "")
-                                .replace("$", "").replace("[", "").replace("]", "")).setValue(sharedViewModel.user).addOnSuccessListener {
-                                Toast.makeText(context,"Dobili ste jos 5 bodova",Toast.LENGTH_SHORT).show()
-                                ocena.text.clear()
-                                komentar.text.clear()
-                                DataBase.databasePlaces.child(naziv.text.toString()).get().addOnSuccessListener {
-                                    sna->
-                                    if(sna.exists())
-                                    {
-                                        var mesto:Places=Places(sna.child("naziv").value.toString(),sna.child("komentar").value.toString(),sna.child("ocena").value.toString().toInt(),sna.child("autor").value.toString(),sna.child("longituda").value.toString(),sna.child("latituda").value.toString(),sna.child("teren").value.toString(),sna.child("sirinaObruca").value.toString(),sna.child("osobinaObruca").value.toString(),sna.child("podlogaKosarka").value.toString(),sna.child("visinaKosa").value.toString(),sna.child("mrezica").value.toString(),sna.child("posecenost").value.toString(),sna.child("dimenzije").value.toString(),sna.child("rasveta").value.toString(),sna.child("prosecanBrojLjudi").value.toString().toIntOrNull(),sna.child("mreza").value.toString(),sna.child("golovi").value.toString(),sna.child("podlogaFudbal").value.toString(),sna.child("img").value.toString(),sna.child("datumVreme").value.toString())
-                                        var tacanMesec=instanca.get(Calendar.MONTH)+1
-                                        var datum=instanca.get(Calendar.DAY_OF_MONTH).toString()+"."+tacanMesec.toString()+"."+instanca.get(Calendar.YEAR)
-                                        var vreme=instanca.get(Calendar.HOUR_OF_DAY).toString()+":"+instanca.get(Calendar.MINUTE)
-                                        var datumVreme=datum+" u "+vreme
-                                        mesto.datumInterakcije=datumVreme
-                                        DataBase.databasePlaces.child(naziv.text.toString()).setValue(mesto).addOnSuccessListener {
+                var ja=GeoPoint(locationViewModel.getSvojaLati(),locationViewModel.getSvojaLongi())
+                var mesto=GeoPoint(latituda.text.toString().toDouble(),longituda.text.toString().toDouble())
+                if(ja.distanceToAsDouble(mesto)>1000)
+                {
+                    Toast.makeText(context,"Ne mozete komentarisati mesto jer Vam nije u blizini",Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    progress.visibility = View.VISIBLE
+                    var id =
+                        naziv.text.toString() + ocena.text.toString() + komentar.text.toString() + sharedViewModel.ime.toString()
+                    id = id.replace(".", "").replace("#", "").replace("$", "").replace("[", "")
+                        .replace("]", "").replace("@", "")
+                    var instanca = Calendar.getInstance()
+                    var mesec = instanca.get(Calendar.MONTH).toInt() + 1
+                    var datum = instanca.get(Calendar.DAY_OF_MONTH)
+                        .toString() + "." + mesec.toString() + "." + instanca.get(Calendar.YEAR)
+                    var vreme = instanca.get(Calendar.HOUR_OF_DAY).toString() + ":" + instanca.get(
+                        Calendar.MINUTE
+                    )
+                    var koment: Comments = Comments(
+                        id,
+                        sharedViewModel.ime,
+                        naziv.text.toString(),
+                        ocena.text.toString().toInt(),
+                        komentar.text.toString(),
+                        datum,
+                        vreme,
+                        0,
+                        0
+                    )
+                    DataBase.databaseComments.child(id).setValue(koment).addOnCompleteListener {
+                        Toast.makeText(context, "Uspesno ste dodali komentar", Toast.LENGTH_SHORT)
+                            .show()
+                        progress.visibility = View.GONE
+                        DataBase.databaseUsers.child(
+                            sharedViewModel.ime.replace(".", "").replace("#", "")
+                                .replace("$", "").replace("[", "").replace("]", "")
+                        ).get().addOnSuccessListener { snapshotU ->
+                            if (snapshotU.exists()) {
+                                sharedViewModel.user = User(
+                                    snapshotU.child("korisnicko").value.toString(),
+                                    snapshotU.child("sifra").value.toString(),
+                                    snapshotU.child("ime").value.toString(),
+                                    snapshotU.child("prezime").value.toString(),
+                                    snapshotU.child("brojTelefona").value.toString().toLongOrNull(),
+                                    snapshotU.child("img").value.toString(),
+                                    ArrayList(),
+                                    snapshotU.child("bodovi").value.toString().toIntOrNull()
+                                )
+                                sharedViewModel.user.bodovi = sharedViewModel.user.bodovi?.plus(5)
+                                DataBase.databaseUsers.child(
+                                    sharedViewModel.ime.replace(".", "").replace("#", "")
+                                        .replace("$", "").replace("[", "").replace("]", "")
+                                ).setValue(sharedViewModel.user).addOnSuccessListener {
+                                    Toast.makeText(
+                                        context,
+                                        "Dobili ste jos 5 bodova",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    ocena.text.clear()
+                                    komentar.text.clear()
+                                    DataBase.databasePlaces.child(naziv.text.toString()).get()
+                                        .addOnSuccessListener { sna ->
+                                            if (sna.exists()) {
+                                                var mesto: Places = Places(
+                                                    sna.child("naziv").value.toString(),
+                                                    sna.child("komentar").value.toString(),
+                                                    sna.child("ocena").value.toString().toInt(),
+                                                    sna.child("autor").value.toString(),
+                                                    sna.child("longituda").value.toString(),
+                                                    sna.child("latituda").value.toString(),
+                                                    sna.child("teren").value.toString(),
+                                                    sna.child("sirinaObruca").value.toString(),
+                                                    sna.child("osobinaObruca").value.toString(),
+                                                    sna.child("podlogaKosarka").value.toString(),
+                                                    sna.child("visinaKosa").value.toString(),
+                                                    sna.child("mrezica").value.toString(),
+                                                    sna.child("posecenost").value.toString(),
+                                                    sna.child("dimenzije").value.toString(),
+                                                    sna.child("rasveta").value.toString(),
+                                                    sna.child("prosecanBrojLjudi").value.toString()
+                                                        .toIntOrNull(),
+                                                    sna.child("mreza").value.toString(),
+                                                    sna.child("golovi").value.toString(),
+                                                    sna.child("podlogaFudbal").value.toString(),
+                                                    sna.child("img").value.toString(),
+                                                    sna.child("datumVreme").value.toString()
+                                                )
+                                                var tacanMesec = instanca.get(Calendar.MONTH) + 1
+                                                var datum = instanca.get(Calendar.DAY_OF_MONTH)
+                                                    .toString() + "." + tacanMesec.toString() + "." + instanca.get(
+                                                    Calendar.YEAR
+                                                )
+                                                var vreme = instanca.get(Calendar.HOUR_OF_DAY)
+                                                    .toString() + ":" + instanca.get(Calendar.MINUTE)
+                                                var datumVreme = datum + " u " + vreme
+                                                mesto.datumInterakcije = datumVreme
+                                                DataBase.databasePlaces.child(naziv.text.toString())
+                                                    .setValue(mesto).addOnSuccessListener {
+
+                                                }
+                                            }
 
                                         }
-                                    }
-
-                                }
                                 }.addOnFailureListener {
-                                Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
+                                }
                             }
+                        }.addOnFailureListener {
+                            Toast.makeText(
+                                context,
+                                "Greksa",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
-                    }.addOnFailureListener { Toast.makeText(context,"Greksa",Toast.LENGTH_LONG).show() }
-                }.addOnFailureListener{
-                    Toast.makeText(context,"Greska",Toast.LENGTH_LONG).show()
+                    }.addOnFailureListener {
+                        Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
              }

@@ -87,6 +87,7 @@ class HomeFragment : Fragment() {
                             .load(imageName)
                             .into(profilna)
                     }
+
                     ucitaj.visibility=View.GONE
                 }
             }.addOnFailureListener { exception ->
@@ -109,11 +110,15 @@ class HomeFragment : Fragment() {
         }
         dodajMesto=view.findViewById(R.id.buttonDodajObjekat)
         dodajMesto.setOnClickListener{
+            sharedViewModel.azurirajBrisi=true
+            sharedViewModel.komentarisi=false
             findNavController().navigate(R.id.action_homeFragment_to_dodajMestoFragment)
         }
 
         komentarisiMesto=view.findViewById(R.id.buttonKomentarisiOcena)
         komentarisiMesto.setOnClickListener{
+            sharedViewModel.komentarisi=true
+            sharedViewModel.azurirajBrisi=false
             findNavController().navigate(R.id.action_homeFragment_to_komentarOcenaFragment)
         }
         svojiKomentari=view.findViewById(R.id.buttonSvojiKomentari)
@@ -169,7 +174,7 @@ class HomeFragment : Fragment() {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         map = requireView().findViewById(R.id.mapGPS)
         map.setMultiTouchControls(true)
-        var startPoint: GeoPoint = GeoPoint(43.158495, 22.585555)
+        var startPoint: GeoPoint = GeoPoint(locationViewModel.getSvojaLati(),locationViewModel.getSvojaLongi())
         map.controller.setCenter(startPoint)
 
 

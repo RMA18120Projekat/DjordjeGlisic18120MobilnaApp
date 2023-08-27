@@ -59,6 +59,8 @@ class MojaMestaFragment : Fragment() {
             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 var mojeMesto: String = p0?.adapter?.getItem(p2) as String
                 sharedViewModel.izabranoMesto=mojeMesto
+                sharedViewModel.azurirajBrisi=true
+                sharedViewModel.komentarisi=false
                 findNavController().navigate(R.id.action_mojaMestaFragment_to_detaljniFragment2)
             }
         })

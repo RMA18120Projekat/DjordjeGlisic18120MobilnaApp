@@ -164,7 +164,14 @@ class MapFragment : Fragment() {
                        }
                        val lon = clickedPoint.longitude.toString()
                        val lati = clickedPoint.latitude.toString()
-                       locationViewModel.setLocation(lon, lati)
+                       if(sharedViewModel.azurirajBrisi==true) {
+                           locationViewModel.setLocation(lon, lati)
+                       }
+                       if(sharedViewModel.komentarisi==true)
+                       {
+                            locationViewModel.setLocationKoment(lon,lati)
+                       }
+
                        findNavController().popBackStack()
                        return true
 
@@ -304,7 +311,18 @@ class MapFragment : Fragment() {
                             postoji=true
                             val lon = clickedPoint.longitude.toString()
                             val lati = clickedPoint.latitude.toString()
-                            locationViewModel.setLocationAndName(lon, lati,mesto.naziv.toString(),true)
+                            if(sharedViewModel.komentarisi==true) {
+                                locationViewModel.setLocationAndNameKoment(
+                                    lon,
+                                    lati,
+                                    mesto.naziv.toString(),
+                                    true
+                                )
+                            }
+                            else if(sharedViewModel.azurirajBrisi==true)
+                            {
+                                locationViewModel.setLocationAndName(lon,lati,mesto.naziv.toString(),true)
+                            }
                             findNavController().popBackStack()
                             return true
                         }
