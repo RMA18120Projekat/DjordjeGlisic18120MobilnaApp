@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
         ucitaj=view.findViewById(R.id.ucitajImeSlika)
         profilna=view.findViewById(R.id.profilna)
         prezimeBaza=view.findViewById(R.id.textViewKorisnikPrezime)
+        locationViewModel.setLocationAndNameKoment("","","",false)
 
         setHasOptionsMenu(true)
         try {

@@ -318,13 +318,6 @@ private lateinit var buttonInfo:Button
             }
             else
             {
-                var ja=GeoPoint(locationViewModel.getSvojaLati(),locationViewModel.getSvojaLongi())
-                var mesto=GeoPoint(latituda.text.toString().toDouble(),longituda.text.toString().toDouble())
-                if(ja.distanceToAsDouble(mesto)>1000)
-                {
-                    Toast.makeText(context,"Ne mozete komentarisati mesto jer Vam nije u blizini",Toast.LENGTH_SHORT).show()
-                }
-                else {
                     progress.visibility = View.VISIBLE
                     var id =
                         naziv.text.toString() + ocena.text.toString() + komentar.text.toString() + sharedViewModel.ime.toString()
@@ -437,7 +430,7 @@ private lateinit var buttonInfo:Button
                         Toast.makeText(context, "Greska", Toast.LENGTH_LONG).show()
                     }
                 }
-            }
+
              }
             else{
                 Toast.makeText(context,"Izabrano mesto vise nije u bazi (izbrisano je)",Toast.LENGTH_LONG).show()
