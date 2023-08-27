@@ -575,6 +575,8 @@ class DetaljniFragment : Fragment() {
                     Places(naziv.text.toString(),opis.text.toString(),ocena.text.toString().toIntOrNull(),sharedViewModel.ime,longi, lati,terenIzabran,sirinaIzabrana,osobinaIzabrana,podlogaKIzabrana,koseviIzabrana,mrezicaIzabrana,posecenostIzabrana,dimenzijeIzabrana,rasvetaIzabrana,prosecanBrojLjudi.text.toString().toIntOrNull(),"","","",imgUrl)
                 }
                 DataBase.databasePlaces.child(key).setValue(mesto).addOnSuccessListener {
+                    sharedViewModel.prethodnaLa=mesto.latituda.toString()
+                    sharedViewModel.prethodnaLo=mesto.longituda.toString()
 
                     ucitaj.visibility = View.GONE
                     Toast.makeText(
