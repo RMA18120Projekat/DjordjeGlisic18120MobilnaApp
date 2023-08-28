@@ -36,6 +36,7 @@ class MapFragment : Fragment() {
     private val locationViewModel:LocationViewModel by activityViewModels()
     private val sharedViewModel:KorisnikViewModel by activityViewModels()
     private var nizMesta : ArrayList<Places> = ArrayList()
+    private var tudja : ArrayList<Places> = ArrayList()
 
 
     override fun onCreateView(
@@ -45,6 +46,14 @@ class MapFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
         val nizObserver= Observer<ArrayList<Places>>{ newValue->
             nizMesta=newValue
+            tudja.clear()
+            for(m in nizMesta)
+            {
+                if(m.autor!=sharedViewModel.ime)
+                {
+                    tudja.add(m)
+                }
+            }
             //Kad izabere samo mapu
             if(locationViewModel.samoPregled==true)
             {
@@ -303,7 +312,7 @@ class MapFragment : Fragment() {
                 {
                     var postoji=false
                     var i:Int=0
-                    for(mesto in nizMesta)
+                    for(mesto in tudja)
                     {
                         var objPoint=GeoPoint(mesto.latituda!!.toDouble(),mesto.longituda!!.toDouble())
                         if(endPoint.distanceToAsDouble(objPoint)<=60)

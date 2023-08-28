@@ -421,7 +421,6 @@ class PretraziObjekatFragment : Fragment() {
             }
             if(komentarMesta.text.toString().isNotEmpty())
             {
-                Toast.makeText(context,"Uso sam u komentar",Toast.LENGTH_SHORT).show()
                nizFiltriranihMestaPom=nizFiltriranihMestaPom.filter {
                         place-> place.komentar == komentarMesta.text.toString()
 

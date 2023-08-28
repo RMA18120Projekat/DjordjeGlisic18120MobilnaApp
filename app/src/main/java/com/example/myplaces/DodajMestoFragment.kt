@@ -206,6 +206,7 @@ class DodajMestoFragment : Fragment() {
                 id: Long
             ) {
                 sirinaIzabrana = adapterView?.getItemAtPosition(positon).toString()
+
             }
         }
         osobinaObruca.onItemSelectedListener=object :AdapterView.OnItemSelectedListener {

@@ -77,8 +77,6 @@ class MojaMestaFragment : Fragment() {
             }
         }
 
-        // Kako biste izbegli Exception "Fragment not attached to a context",
-        // proverite da li je fragment povezan sa aktivnošću pre nego što ažurirate interfejs
         if (isAdded) {
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, imena)
             listView.adapter = adapter

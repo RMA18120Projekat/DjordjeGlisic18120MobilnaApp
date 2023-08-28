@@ -102,14 +102,14 @@ private  var koordinate:ArrayList<Koordinate> = ArrayList<Koordinate>()
                     }
                 }
 
-                mojaMesta.clear() // Obrišite postojeće podatke iz liste
-                mojaMesta.addAll(updatedPlaces) // Ažurirajte listu sa novim podacima
+                mojaMesta.clear()
+                mojaMesta.addAll(updatedPlaces)
                 _myPlaces.postValue(mojaMesta)
 
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Greška pri dohvaćanju podataka
+
                 Log.e(ContentValues.TAG, "Error fetching Places data: ${error.message}")
             }
         })

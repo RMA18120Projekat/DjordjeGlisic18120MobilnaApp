@@ -70,6 +70,7 @@ class HomeFragment : Fragment() {
         profilna=view.findViewById(R.id.profilna)
         prezimeBaza=view.findViewById(R.id.textViewKorisnikPrezime)
         locationViewModel.setLocationAndNameKoment("","","",false)
+        locationViewModel.setLocationAndName("","","",false)
 
         setHasOptionsMenu(true)
         try {
@@ -199,6 +200,7 @@ class HomeFragment : Fragment() {
 
             // Pokretanje zahtjeva za dozvolom
             requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
         } else {
             setUpMap()
         }
@@ -207,6 +209,7 @@ class HomeFragment : Fragment() {
     private fun setMyLocationOverlay() {
         val myLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
         myLocationOverlay.enableMyLocation()
+        myLocationOverlay.enableFollowLocation()
         map.overlays.add(myLocationOverlay)
         map.controller.setCenter(myLocationOverlay.myLocation)
     }

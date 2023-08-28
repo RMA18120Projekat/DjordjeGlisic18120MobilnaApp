@@ -84,7 +84,6 @@ class EditFragment : Fragment() {
         nova1.visibility=View.GONE
         nova2=view.findViewById(R.id.editTextSifra2)
         nova2.visibility=View.GONE
-        var menjajKorisnicko=false
         back=view.findViewById(R.id.buttonBackU)
         back.setOnClickListener{
             findNavController().navigate(R.id.action_editFragment_to_homeFragment)
@@ -146,10 +145,10 @@ class EditFragment : Fragment() {
             //AZURIRANJE SPOREDNIH(NE KLJUCNIH ATRIBUTA)
             if(korisnicko==sharedViewModel.user.korisnicko&&pass.text.toString()==sharedViewModel.user.sifra)
             {
-               if(menjajSifru==false&&menjajKorisnicko==false) {
+               if(menjajSifru==false) {
                         azurirajRealTimeDataBase(user)
                         }
-                else if(menjajSifru==true&&menjajKorisnicko==false)
+                else if(menjajSifru==true)
                 {
                     if(nova1.text.toString()==nova2.text.toString()&&nova1.text.toString().length>5)
                     {
@@ -240,31 +239,23 @@ class EditFragment : Fragment() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             imageView.setImageBitmap(imageBitmap)
-            // Create a reference to the image file in Firebase Storage
             val imagesRef = storageRef.child("images/${System.currentTimeMillis()}.jpg")
 
-            // Convert the bitmap to bytes
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val imageData = baos.toByteArray()
 
-            // Upload the image to Firebase Storage
             zaSliku.visibility=View.VISIBLE
             imageView.visibility=View.GONE
             val uploadTask = imagesRef.putBytes(imageData)
             uploadTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Image upload success
-                    // Now you can get the download URL of the image and save it to the database
                     imagesRef.downloadUrl.addOnSuccessListener { uri ->
-                        // Save the URI to the database or use it as needed
                         imgUrl = uri.toString()
                         sharedViewModel.img=imgUrl
                         zaSliku.visibility=View.GONE
                         imageView.visibility=View.VISIBLE
-                        // Add the code to save the URL to the user's data in Firebase Database here
                     }.addOnFailureListener { exception ->
-                        // Handle any errors that may occur while retrieving the download URL
                         Toast.makeText(requireContext(), "Failed to get download URL.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
