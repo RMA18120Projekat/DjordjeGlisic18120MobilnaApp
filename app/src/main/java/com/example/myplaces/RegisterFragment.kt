@@ -73,7 +73,6 @@ private lateinit var cekajSliku:ProgressBar
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
                 }
             } else {
-                // Ako dozvola nije odobrena, zahtevajte je
                 ActivityCompat.requestPermissions(
                     requireActivity(),
                     arrayOf(Manifest.permission.CAMERA),
